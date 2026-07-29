@@ -10,17 +10,21 @@ export const FALLBACK_SETTINGS: Settings = {
 };
 
 export async function getSettings(): Promise<Settings> {
-  const { data, error } = await supabaseAdmin
-    .from("settings")
-    .select("*")
-    .order("updated_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  try {
+    const { data, error } = await supabaseAdmin
+      .from("settings")
+      .select("*")
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-  if (error || !data) {
-    // Fallback mencegah halaman publik crash jika settings belum di-seed.
+    if (error || !data) {
+      // Fallback mencegah halaman publik crash jika settings belum di-seed.
+      return FALLBACK_SETTINGS;
+    }
+
+    return data;
+  } catch {
     return FALLBACK_SETTINGS;
   }
-
-  return data;
 }
