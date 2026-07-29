@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "main": ".open-next/worker.js",
-  "name": "dauroh-manis-raya",
+  "name": "pendaftaran-dauroh-ilmiah-kalbar",
   "compatibility_date": "2026-07-29",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
@@ -11,7 +11,7 @@
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "dauroh-manis-raya",
+      "service": "pendaftaran-dauroh-ilmiah-kalbar",
     },
   ],
 }
