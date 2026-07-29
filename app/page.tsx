@@ -9,6 +9,8 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { getSettings } from "@/lib/settings";
 import { LibraryBig } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const settings = await getSettings();
 
