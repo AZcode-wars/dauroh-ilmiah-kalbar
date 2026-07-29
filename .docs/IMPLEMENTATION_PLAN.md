@@ -769,9 +769,12 @@ export function buildWhatsAppUrl(nomorWa: string, message: string): string {
 }
 ```
 
-- [ ] **Step 3: Verify responsive layout**
+- [ ] **Step 3: Visual check manual**
 
-Check mobile and desktop viewport manually.
+Buka landing page di mobile dan desktop viewport untuk memastikan:
+- Hero, Tentang, Fasilitas, Rundown, Lokasi, CTA muncul benar.
+- Tautan WhatsApp mengarah ke nomor yang sesuai dari settings.
+- Layout responsif di viewport 375px dan 1440px.
 
 - [ ] **Step 4: Verify commands**
 
@@ -841,6 +844,19 @@ On API response:
 npm run lint
 npm run typecheck
 ```
+
+- [ ] **Step 6: Playwright test — form submission scenarios**
+
+Buat file `e2e/register-form.spec.ts` untuk menguji:
+- **Halaman form termuat** — GET `/register` mengembalikan 200.
+- **Closed registration** — ubah setting `registration_close_at` ke masa lalu via API admin, pastikan halaman menampilkan "Pendaftaran Tidak Tersedia" dan form tidak muncul. (Reset settings setelah test.)
+- **Valid submission** — isi form lengkap, submit, pastikan redirect ke `/register/success`.
+- **WA invalid** — isi WA dengan `"abc"`, submit, pastikan error toast muncul dengan pesan "Nomor Whatsapp Tidak Valid!".
+- **Jam pasti tanpa waktu** — pilih jam pasti, kosongkan field waktu, submit, pastikan error di field `waktu_berangkat`.
+- **Fleksibel tanpa deskripsi** — pilih fleksibel, kosongkan textarea, submit, pastikan error di field `deskripsi_berangkat`.
+- **Duplicate WA** — submit 2x dengan WA sama, test ke-2 harus menampilkan toast warning duplicate.
+- **Rombongan false → `jumlah_rombongan` null** — isi form tanpa rombongan, submit, verifikasi via API admin bahwa field `jumlah_rombongan` bernilai `null`.
+- **Confirmation page** — setelah submit sukses, halaman `/register/success` menampilkan data peserta yang benar.
 
 ---
 
@@ -926,6 +942,20 @@ npm run lint
 npm run typecheck
 ```
 
+- [ ] **Step 8: Playwright test — admin API endpoints**
+
+Buat file `e2e/api-admin.spec.ts` untuk menguji:
+- **Autentikasi** — login dulu via `POST /api/auth/login`, simpan cookie untuk request berikutnya.
+- **GET /api/admin/peserta** — mengembalikan array peserta (minimal kosong `[]`).
+- **DELETE /api/admin/peserta/[id]** — soft delete peserta, pastikan `is_deleted` menjadi `true`.
+- **GET /api/admin/peserta/trash** — mengembalikan peserta yang sudah dihapus.
+- **PATCH /api/admin/peserta/[id]/restore** — restore peserta, pastikan kembali ke daftar aktif.
+- **DELETE /api/admin/peserta/[id]/permanent** — hapus permanen, pastikan hilang dari trash.
+- **GET /api/admin/peserta/summary** — mengembalikan agregat headcount, menginap, kendaraan, paket makan.
+- **GET /api/admin/peserta/export/csv** — mengembalikan file CSV dengan header dan baris data.
+- **GET /api/admin/settings** — mengembalikan settings saat ini.
+- **PATCH /api/admin/settings** — update settings, pastikan response sesuai.
+
 ---
 
 ## Task 10: Admin Dashboard UI
@@ -979,16 +1009,36 @@ Rows show table fields. Modal shows full participant details and delete action w
 
 Download CSV using API endpoint or client-side PapaParse helper.
 
-- [ ] **Step 6: Verify commands**
+- [ ] **Step 6: Build trash page (Task 11 — digabung dengan Task 10)**
+
+Buat `app/admin/dashboard/trash/page.tsx` dan `components/admin/TrashTable.tsx`. Tampilkan daftar peserta yang di-soft-delete dengan kolom `deleted_at`. Sediakan tombol Restore (panggil `PATCH /api/admin/peserta/[id]/restore`) dan tombol Hapus Permanen (panggil `DELETE /api/admin/peserta/[id]/permanent` dengan konfirmasi destruktif).
+
+- [ ] **Step 7: Verify commands**
 
 ```bash
 npm run lint
 npm run typecheck
 ```
 
+- [ ] **Step 8: Playwright test — dashboard UI & trash**
+
+Buat file `e2e/admin-dashboard.spec.ts` untuk menguji:
+- **Login flow** — buka `/admin/login`, isi password salah → lihat error, isi benar → redirect ke `/admin/dashboard`.
+- **Forged cookie** — set cookie `admin_session` dengan value palsu, akses `/admin/dashboard` → redirect ke `/admin/login`.
+- **Dashboard termuat** — setelah login, halaman dashboard menampilkan summary cards dan tabel peserta.
+- **Filter/search** — gunakan filter asal, menginap, kendaraan, dan search nama, pastikan tabel berubah.
+- **Export CSV** — klik tombol export, pastikan file CSV terdownload dengan header yang benar.
+- **Soft delete** — klik delete pada baris peserta, konfirmasi, peserta hilang dari tabel aktif.
+- **Trash page** — navigasi ke `/admin/dashboard/trash`, peserta yang di-delete muncul.
+- **Restore** — klik restore, peserta kembali ke tabel aktif.
+- **Permanent delete** — klik hapus permanen, konfirmasi, peserta hilang dari trash.
+- **Settings page** — buka `/admin/dashboard/settings`, ubah waktu pendaftaran, simpan, pastikan tersimpan.
+
 ---
 
 ## Task 11: Trash UI
+
+> **Catatan:** Task ini sudah digabung ke dalam **Task 10 Step 6**. Implementasi dan testing trash (restore & permanent delete) dilakukan bersamaan dengan admin dashboard UI. Tidak ada langkah terpisah di sini.
 
 **Files:**
 
@@ -999,24 +1049,7 @@ npm run typecheck
 
 - Consumes Trash endpoints from Task 9.
 
-- [ ] **Step 1: Build Trash page**
-
-Show deleted rows with `deleted_at`.
-
-- [ ] **Step 2: Implement Restore action**
-
-Call `PATCH /api/admin/peserta/[id]/restore`.
-
-- [ ] **Step 3: Implement Permanent Delete action**
-
-Use destructive confirmation dialog. Call `DELETE /api/admin/peserta/[id]/permanent`.
-
-- [ ] **Step 4: Verify commands**
-
-```bash
-npm run lint
-npm run typecheck
-```
+- [ ] **Selesai** — implementasi dan Playwright test sudah termasuk di Task 10.
 
 ---
 

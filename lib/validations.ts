@@ -11,7 +11,6 @@ export const registerPesertaSchema = z.object({
   menginap: z.boolean(),
   asal: z.enum(KABUPATEN_KALBAR, { message: "Harap Asal diisi terlebih dahulu!" }),
   membawa_rombongan: z.boolean(),
-  // jumlah_rombongan dibuat nullable agar dapat di-handle oleh React Hook Form
   jumlah_rombongan: z.coerce.number().int().min(1).nullable(),
   tipe_waktu_berangkat: z.enum(["jam_pasti", "fleksibel"]),
   waktu_berangkat: z.string().nullable(),
@@ -45,8 +44,12 @@ export const registerPesertaSchema = z.object({
   }
 });
 
-// Infer type dari skema untuk kemudahan penggunaan di komponen
+// Tipe data output setelah divalidasi dan ditransformasi Zod — untuk canonicalizer, API, dan handler submit
 export type RegisterPesertaInput = z.infer<typeof registerPesertaSchema>;
+// Tipe data mentah dari form (sebelum transformasi Zod) — untuk useForm generic
+export type RegisterPesertaFormValues = z.input<typeof registerPesertaSchema>;
+// Tipe data yang diterima handleSubmit setelah Zod menghasilkan output
+export type RegisterPesertaOutput = z.output<typeof registerPesertaSchema>;
 
 // Fungsi untuk menormalisasi data dari input user sebelum dimasukkan ke database
 // Mencegah data ambigu, contoh: jumlah rombongan yang diinput tapi opsi membawa rombongan = false
