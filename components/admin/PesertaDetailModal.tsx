@@ -22,7 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Trash2, Loader2 } from "lucide-react";
+import { Trash2, Loader2, ClipboardCheck } from "lucide-react";
 import type { Peserta } from "@/types/peserta";
 import { JENIS_KENDARAAN } from "@/lib/constants";
 
@@ -31,6 +31,7 @@ type PesertaDetailModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onDeleted: () => void;
+  onUpdated?: (peserta: Peserta) => void;
 };
 
 // Modal detail peserta dengan informasi lengkap dan tombol hapus
@@ -39,8 +40,10 @@ export default function PesertaDetailModal({
   open,
   onOpenChange,
   onDeleted,
+  onUpdated,
 }: PesertaDetailModalProps) {
   const [deleting, setDeleting] = useState(false);
+  const [marking, setMarking] = useState(false);
 
   async function handleDelete() {
     setDeleting(true);
@@ -52,6 +55,29 @@ export default function PesertaDetailModal({
       // Silent — error handled by parent
     } finally {
       setDeleting(false);
+    }
+  }
+
+  async function handleToggleHadir() {
+    setMarking(true);
+    try {
+      const res = await fetch(`/api/admin/peserta/${peserta.id}/kehadiran`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hadir: !peserta.is_hadir }),
+      });
+      if (res.ok) {
+        const updated: Peserta = {
+          ...peserta,
+          is_hadir: !peserta.is_hadir,
+          hadir_at: !peserta.is_hadir ? new Date().toISOString() : null,
+        };
+        onUpdated?.(updated);
+      }
+    } catch {
+      // Silent — error handled by parent
+    } finally {
+      setMarking(false);
     }
   }
 
@@ -88,6 +114,16 @@ export default function PesertaDetailModal({
                 Rombongan ({peserta.jumlah_rombongan} org)
               </Badge>
             )}
+            <Badge
+              variant="secondary"
+              className={
+                peserta.is_hadir
+                  ? "bg-emerald/10 text-emerald"
+                  : "bg-slate-100 text-slate-500"
+              }
+            >
+              {peserta.is_hadir ? "Hadir" : "Belum Hadir"}
+            </Badge>
             <Badge variant="secondary">{kendaraanLabel}</Badge>
           </div>
 
@@ -114,6 +150,21 @@ export default function PesertaDetailModal({
             <DataRow label="Tgl Daftar" value={formatToWIB(peserta.created_at)} />
           </div>
         </div>
+
+        {/* Tombol Tandai Hadir / Batal Hadir */}
+        <Button
+          variant={peserta.is_hadir ? "destructive" : "default"}
+          className={`w-full gap-2 ${peserta.is_hadir ? "" : "bg-emerald hover:bg-emerald-soft"}`}
+          onClick={handleToggleHadir}
+          disabled={marking}
+        >
+          {marking ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <ClipboardCheck className="h-4 w-4" />
+          )}
+          {peserta.is_hadir ? "Batal Hadir" : "Tandai Hadir"}
+        </Button>
 
         {/* Tombol Hapus dengan konfirmasi */}
         <AlertDialog>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Eye, Trash2, Loader2 } from "lucide-react";
+import { Eye, Trash2, Loader2, ClipboardCheck } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -43,6 +43,7 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
     kendaraan: "",
     rombongan: "",
   });
+  const [markingId, setMarkingId] = useState<string | null>(null);
 
   // Memuat data peserta berdasarkan filter
   useEffect(() => {
@@ -92,6 +93,37 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
     }
   }
 
+  async function handleToggleHadir(p: Peserta) {
+    if (markingId === p.id) return;
+    const target = !p.is_hadir;
+    setMarkingId(p.id);
+    try {
+      const res = await fetch(`/api/admin/peserta/${p.id}/kehadiran`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hadir: target }),
+      });
+      if (res.ok) {
+        setPeserta((prev) =>
+          prev.map((x) =>
+            x.id === p.id
+              ? {
+                  ...x,
+                  is_hadir: target,
+                  hadir_at: target ? new Date().toISOString() : null,
+                }
+              : x
+          )
+        );
+        window.dispatchEvent(new Event("kehadiran-updated"));
+      }
+    } catch {
+      // Silent
+    } finally {
+      setMarkingId(null);
+    }
+  }
+
   return (
     <div className={`flex flex-col gap-4 ${scrollOnFilter ? "" : "flex-1 min-h-0"}`}>
       <div className="shrink-0">
@@ -124,6 +156,9 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
                 Total Rombongan
               </TableHead>
               <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
+                Hadir
+              </TableHead>
+              <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
                 Tgl Daftar
               </TableHead>
               <TableHead className="w-24 text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
@@ -134,13 +169,13 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={9} className="py-12 text-center">
+                <TableCell colSpan={10} className="py-12 text-center">
                   <Loader2 className="mx-auto h-5 w-5 animate-spin text-muted-foreground" />
                 </TableCell>
               </TableRow>
             ) : peserta.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="py-12 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={10} className="py-12 text-center text-sm text-muted-foreground">
                   Belum ada peserta
                 </TableCell>
               </TableRow>
@@ -181,6 +216,33 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
                   </TableCell>
                   <TableCell className="font-mono text-sm font-medium">
                     {getPesertaHeadcount(p.membawa_rombongan, p.jumlah_rombongan)}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                      <Badge
+                        variant="secondary"
+                        className={
+                          p.is_hadir
+                            ? "bg-emerald/10 text-emerald"
+                            : "bg-slate-100 text-slate-500"
+                        }
+                      >
+                        {p.is_hadir ? "Hadir" : "Tidak"}
+                      </Badge>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-emerald hover:text-emerald"
+                        onClick={() => handleToggleHadir(p)}
+                        disabled={markingId === p.id}
+                      >
+                        {markingId === p.id ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <ClipboardCheck className="h-3.5 w-3.5" />
+                        )}
+                      </Button>
+                    </div>
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground">
                     {formatToWIB(p.created_at)}
@@ -238,6 +300,13 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
           open={modalOpen}
           onOpenChange={setModalOpen}
           onDeleted={() => setFilters((prev) => ({ ...prev }))}
+          onUpdated={(updated) => {
+            setPeserta((prev) =>
+              prev.map((x) => (x.id === updated.id ? updated : x))
+            );
+            setSelected(updated);
+            window.dispatchEvent(new Event("kehadiran-updated"));
+          }}
         />
       )}
     </div>

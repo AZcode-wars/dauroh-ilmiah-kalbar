@@ -36,6 +36,8 @@ export async function GET() {
       "headcount",
       "paket_makan",
       "created_at",
+      "is_hadir",
+      "hadir_at",
     ];
 
     const rows = (peserta ?? []).map((p: Peserta) => {
@@ -55,6 +57,8 @@ export async function GET() {
         String(headcount),
         String(headcount * 3),
         p.created_at,
+        String(p.is_hadir),
+        p.hadir_at ?? "",
       ];
     });
 
@@ -63,7 +67,7 @@ export async function GET() {
     return new NextResponse(csvContent, {
       headers: {
         "Content-Type": "text/csv; charset=utf-8",
-        "Content-Disposition": 'attachment; filename="data-peserta.csv"',
+        "Content-Disposition": 'attachment; filename="data-peserta-dauroh.csv"',
       },
     });
   } catch {

@@ -9,6 +9,7 @@ import {
   Bus,
   UtensilsCrossed,
   Info,
+  ClipboardCheck,
 } from "lucide-react";
 import {
   Dialog,
@@ -20,6 +21,7 @@ import {
 
 const CARD_DEFS = [
   { key: "total_headcount", label: "Total Peserta", icon: Users },
+  { key: "total_hadir", label: "Hadir", icon: ClipboardCheck },
   { key: "total_menginap", label: "Menginap", icon: BedDouble },
   { key: "total_motor", label: "Motor", icon: Bike },
   { key: "total_mobil", label: "Mobil", icon: Car },
@@ -54,11 +56,21 @@ function AnimatedValue({ value, duration = 800 }: { value: number; duration?: nu
 export default function SummaryCards() {
   const [summary, setSummary] = useState<Summary | null>(null);
 
+  async function load() {
+    try {
+      const res = await fetch("/api/admin/peserta/summary");
+      if (res.ok) {
+        setSummary((await res.json()) as Summary);
+      }
+    } catch {
+      // Silent
+    }
+  }
+
   useEffect(() => {
-    fetch("/api/admin/peserta/summary")
-      .then((r) => r.json())
-      .then(setSummary)
-      .catch(() => {});
+    window.addEventListener("kehadiran-updated", load);
+    Promise.resolve().then(() => { void load(); });
+    return () => window.removeEventListener("kehadiran-updated", load);
   }, []);
 
   if (!summary) {

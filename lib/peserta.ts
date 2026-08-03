@@ -91,6 +91,28 @@ export async function restorePeserta(id: string): Promise<void> {
   if (error) throw error;
 }
 
+// Menandai peserta telah hadir saat registrasi ulang hari-H
+export async function markPesertaHadir(id: string): Promise<void> {
+  const { error } = await supabaseAdmin
+    .from("peserta")
+    .update({ is_hadir: true, hadir_at: new Date().toISOString() })
+    .eq("id", id)
+    .eq("is_deleted", false);
+
+  if (error) throw error;
+}
+
+// Membatalkan tanda hadir (mis. salah klik)
+export async function unmarkPesertaHadir(id: string): Promise<void> {
+  const { error } = await supabaseAdmin
+    .from("peserta")
+    .update({ is_hadir: false, hadir_at: null })
+    .eq("id", id)
+    .eq("is_deleted", false);
+
+  if (error) throw error;
+}
+
 export async function permanentDeletePeserta(id: string): Promise<void> {
   const { error } = await supabaseAdmin.from("peserta").delete().eq("id", id);
 
@@ -105,6 +127,7 @@ export async function permanentDeleteAllPeserta(): Promise<void> {
 
 export async function getSummary(): Promise<{
   total_headcount: number;
+  total_hadir: number;
   total_menginap: number;
   total_motor: number;
   total_mobil: number;
@@ -121,6 +144,7 @@ export async function getSummary(): Promise<{
   const activePeserta = peserta ?? [];
 
   let total_headcount = 0;
+  let total_hadir = 0;
   let total_menginap = 0;
   let total_motor = 0;
   let total_mobil = 0;
@@ -129,6 +153,10 @@ export async function getSummary(): Promise<{
   for (const p of activePeserta) {
     const headcount = getPesertaHeadcount(p.membawa_rombongan, p.jumlah_rombongan);
     total_headcount += headcount;
+
+    if (p.is_hadir) {
+      total_hadir += headcount;
+    }
 
     if (p.menginap) {
       total_menginap += headcount;
@@ -151,6 +179,7 @@ export async function getSummary(): Promise<{
 
   return {
     total_headcount,
+    total_hadir,
     total_menginap,
     total_motor,
     total_mobil,
