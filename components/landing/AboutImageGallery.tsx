@@ -210,7 +210,7 @@ export function AboutImageGallery({ images }: AboutImageGalleryProps) {
           >
             <ChevronRight className="h-5 w-5" />
           </Button>
-          <div className="mt-4 flex items-center justify-center gap-2">
+          <div className="mt-4 flex items-center justify-center gap-1">
             {gallery.map((image, index) => (
               <button
                 key={image.id}
@@ -218,11 +218,15 @@ export function AboutImageGallery({ images }: AboutImageGalleryProps) {
                 aria-label={`Tampilkan gambar ${index + 1}: ${image.alt_text}`}
                 aria-current={index === activeIndex ? "true" : undefined}
                 onClick={() => selectIndex(index)}
-                className={cn(
-                  "h-3 w-3 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald focus-visible:ring-offset-2",
-                  index === activeIndex ? "bg-emerald" : "bg-emerald/30"
-                )}
-              />
+                className="flex h-11 w-11 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald focus-visible:ring-offset-2"
+              >
+                <span
+                  className={cn(
+                    "h-3 w-3 rounded-full",
+                    index === activeIndex ? "bg-emerald" : "bg-emerald/30"
+                  )}
+                />
+              </button>
             ))}
           </div>
         </>
