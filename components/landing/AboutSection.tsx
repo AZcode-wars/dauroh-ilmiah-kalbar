@@ -1,6 +1,11 @@
-import Image from "next/image";
+import { AboutImageGallery } from "@/components/landing/AboutImageGallery";
+import type { AboutImage } from "@/types/about-image";
 
-export function AboutSection() {
+type AboutSectionProps = {
+  images: AboutImage[];
+};
+
+export function AboutSection({ images }: AboutSectionProps) {
   return (
     <section className="py-12 md:py-20 px-4">
       <p className="text-brown font-sans text-sm font-semibold tracking-[0.2em] uppercase mb-3 text-center">
@@ -26,14 +31,7 @@ export function AboutSection() {
               imperdiet a, venenatis vitae, justo.
             </p>
           </div>
-          <Image
-            src="/images/about-poster.jfif"
-            alt="Poster Kajian Muslimah"
-            width={736}
-            height={920}
-            className="max-w-full h-auto rounded-2xl  "
-            priority
-          />
+          <AboutImageGallery images={images} />
         </div>
       </div>
     </section>

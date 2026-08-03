@@ -7,12 +7,16 @@ import { LokasiSection } from "@/components/landing/LokasiSection";
 import { CTASection } from "@/components/landing/CTASection";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { getSettings } from "@/lib/settings";
+import { getAboutImages } from "@/lib/about-images";
 import { LibraryBig } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const settings = await getSettings();
+  const [settings, aboutImages] = await Promise.all([
+    getSettings(),
+    getAboutImages(),
+  ]);
 
   return (
     <main>
@@ -23,7 +27,7 @@ export default async function HomePage() {
       </ScrollReveal>
 
       <ScrollReveal>
-        <AboutSection />
+        <AboutSection images={aboutImages} />
       </ScrollReveal>
 
       <ScrollReveal>

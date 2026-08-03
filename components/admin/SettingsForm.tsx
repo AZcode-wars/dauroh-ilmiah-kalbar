@@ -5,6 +5,7 @@ import { Save, Loader2, Clock, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import AboutGalleryManager from "@/components/admin/AboutGalleryManager";
 
 type FormData = {
   registration_open_at: string;
@@ -88,7 +89,7 @@ export default function SettingsForm() {
   }
 
   return (
-    <div className="max-w-lg space-y-6">
+    <div className="max-w-3xl space-y-6">
       {message && (
         <div
           className={`rounded-md px-4 py-3 text-sm ${
@@ -142,6 +143,8 @@ export default function SettingsForm() {
           />
         </div>
       </div>
+
+      <AboutGalleryManager />
 
       <Button
         onClick={handleSave}
