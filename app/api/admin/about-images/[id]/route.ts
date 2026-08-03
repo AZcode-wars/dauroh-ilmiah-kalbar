@@ -33,7 +33,14 @@ export async function DELETE(
       return NextResponse.json(body, { status: 404 });
     }
 
-    await supabaseAdmin.rpc("delete_about_image", { p_id: parsedId.data });
+    const { error: rpcError } = await supabaseAdmin.rpc("delete_about_image", {
+      p_id: parsedId.data,
+    });
+
+    if (rpcError) {
+      const body: ApiError = { success: false, message: "Terjadi kesalahan sistem" };
+      return NextResponse.json(body, { status: 500 });
+    }
 
     const { error: removeError } = await supabaseAdmin.storage
       .from(ABOUT_IMAGES_BUCKET)
