@@ -18,6 +18,8 @@ export type Peserta = {
   waktu_kepulangan: string | null;
   deskripsi_kepulangan: string | null;
   jenis_kendaraan: JenisKendaraan;
+  is_hadir: boolean;
+  hadir_at: string | null;
   is_deleted: boolean;
   deleted_at: string | null;
   created_at: string;

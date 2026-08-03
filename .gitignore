@@ -52,3 +52,9 @@ e2e
 
 # documentation
 /.docs/
+
+.opencode
+
+# tooling workspaces
+/.wrangler/
+/.superpowers/

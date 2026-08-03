@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
+  ClipboardCheck,
   Trash2,
   Settings,
   LogOut,
@@ -15,6 +16,7 @@ import { Button } from "@/components/ui/button";
 // Navigasi sidebar admin dengan indikator active state dan tombol logout
 const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/dashboard/kehadiran", label: "Check-in", icon: ClipboardCheck },
   { href: "/admin/dashboard/trash", label: "Trash", icon: Trash2 },
   { href: "/admin/dashboard/settings", label: "Pengaturan", icon: Settings },
 ];
