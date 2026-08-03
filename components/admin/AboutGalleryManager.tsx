@@ -105,7 +105,7 @@ export default function AboutGalleryManager() {
   }
 
   async function handleUpload() {
-    if (pendingFiles.length === 0) return;
+    if (pendingFiles.length === 0 || uploading) return;
     setUploading(true);
     setMessage(null);
 
@@ -144,6 +144,7 @@ export default function AboutGalleryManager() {
   }
 
   async function handleReorder(index: number, direction: 1 | -1) {
+    if (busyId !== null) return;
     const target = index + direction;
     if (target < 0 || target >= images.length) return;
 
@@ -180,6 +181,7 @@ export default function AboutGalleryManager() {
   }
 
   async function handleDelete(id: string) {
+    if (busyId !== null) return;
     setBusyId(id);
     setMessage(null);
 
