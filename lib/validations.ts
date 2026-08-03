@@ -76,3 +76,8 @@ export const updateSettingsSchema = z.object({
   path: ["registration_close_at"],
   message: "Waktu tutup harus setelah waktu buka pendaftaran",
 });
+
+// Skema untuk memvalidasi urutan ulang gambar galeri About dari dashboard admin
+export const reorderAboutImagesSchema = z.object({
+  ids: z.array(z.string().uuid()).min(1, "Urutan gambar wajib diisi"),
+});
