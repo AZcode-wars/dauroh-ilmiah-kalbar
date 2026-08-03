@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -51,9 +52,41 @@ export function AboutImageGallery({ images }: AboutImageGalleryProps) {
 
   const dragState = React.useRef<DragState | null>(null);
   const panAtDragStart = React.useRef({ x: 0, y: 0 });
+  const zoomContainerRef = React.useRef<HTMLDivElement | null>(null);
 
   const active = gallery[activeIndex % gallery.length];
   const isZoomed = zoom > 100;
+
+  const getMaxPan = React.useCallback((zoomValue: number) => {
+    const el = zoomContainerRef.current;
+    if (!el) return { maxX: 0, maxY: 0 };
+    const overflow = zoomValue / 100 - 1;
+    return {
+      maxX: (el.clientWidth * overflow) / 2,
+      maxY: (el.clientHeight * overflow) / 2,
+    };
+  }, []);
+
+  const clampPan = React.useCallback(
+    (x: number, y: number) => {
+      const { maxX, maxY } = getMaxPan(zoom);
+      return {
+        x: Math.max(-maxX, Math.min(maxX, x)),
+        y: Math.max(-maxY, Math.min(maxY, y)),
+      };
+    },
+    [zoom, getMaxPan]
+  );
+
+  const changeZoom = React.useCallback(
+    (delta: number) => {
+      const next = Math.min(Math.max(zoom + delta, 100), MAX_ZOOM);
+      if (next === zoom) return;
+      setZoom(next);
+      setPan((current) => clampPan(current.x, current.y));
+    },
+    [zoom, clampPan]
+  );
 
   const resetView = React.useCallback(() => {
     setZoom(100);
@@ -139,10 +172,12 @@ export function AboutImageGallery({ images }: AboutImageGalleryProps) {
     event: React.PointerEvent<HTMLDivElement>
   ) => {
     if (!dragState.current) return;
-    setPan({
-      x: panAtDragStart.current.x + event.clientX - dragState.current.startX,
-      y: panAtDragStart.current.y + event.clientY - dragState.current.startY,
-    });
+    setPan(
+      clampPan(
+        panAtDragStart.current.x + event.clientX - dragState.current.startX,
+        panAtDragStart.current.y + event.clientY - dragState.current.startY
+      )
+    );
   };
 
   const handlePointerEnd = (
@@ -232,86 +267,92 @@ export function AboutImageGallery({ images }: AboutImageGalleryProps) {
         </>
       )}
 
-      <DialogContent className="flex max-w-none flex-col border-cream/20 bg-emerald/95 p-3 text-cream md:p-6 h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)]">
-          <DialogTitle className="text-cream">
-            Preview {active.alt_text}
-          </DialogTitle>
-          <span className="sr-only" data-testid="about-slide-index">
-            {activeIndex + 1}
-          </span>
+      <DialogContent
+        hideDefaultClose
+        className="flex max-w-none flex-col border-cream/20 bg-emerald/95 p-3 text-cream md:p-6 h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)]"
+      >
+        <DialogTitle className="text-cream">Preview {active.alt_text}</DialogTitle>
+        <DialogDescription className="sr-only">
+          Gunakan tombol Perbesar atau Perkecil, atau seret gambar untuk
+          menjelajah bagian yang diperbesar.
+        </DialogDescription>
+        <span className="sr-only" data-testid="about-slide-index">
+          {activeIndex + 1}
+        </span>
+        <div
+          ref={zoomContainerRef}
+          className="relative min-h-0 flex-1 overflow-hidden rounded-xl"
+          style={{
+            touchAction: isZoomed ? "none" : "auto",
+            cursor: isZoomed ? (dragging ? "grabbing" : "grab") : "default",
+          }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerEnd}
+          onPointerCancel={handlePointerEnd}
+        >
           <div
-            className="relative min-h-0 flex-1 overflow-hidden rounded-xl"
+            className="absolute inset-0 flex items-center justify-center"
             style={{
-              touchAction: isZoomed ? "none" : "auto",
-              cursor: isZoomed ? (dragging ? "grabbing" : "grab") : "default",
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom / 100})`,
             }}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerEnd}
-            onPointerCancel={handlePointerEnd}
           >
-            <div
-              className="absolute inset-0 flex items-center justify-center"
-              style={{
-                transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom / 100})`,
-              }}
-            >
-              <Image
-                key={active.id}
-                src={active.url}
-                alt={active.alt_text}
-                fill
-                sizes="100vw"
-                draggable={false}
-                className="object-contain p-1"
-              />
-            </div>
+            <Image
+              key={active.id}
+              src={active.url}
+              alt={active.alt_text}
+              fill
+              sizes="100vw"
+              draggable={false}
+              className="object-contain p-1"
+            />
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-3">
-            <Button
-              type="button"
-              variant="outline"
-              aria-label="Perkecil"
-              disabled={zoom <= 100}
-              onClick={() => setZoom((value) => Math.max(value - ZOOM_STEP, 100))}
-              className="h-11 min-h-11 min-w-11 bg-cream text-emerald hover:bg-cream/90 focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2"
-            >
-              <ZoomOut className="h-5 w-5" />
-              Perkecil
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              aria-label="Perbesar"
-              disabled={zoom >= MAX_ZOOM}
-              onClick={() => setZoom((value) => Math.min(value + ZOOM_STEP, MAX_ZOOM))}
-              className="h-11 min-h-11 min-w-11 bg-cream text-emerald hover:bg-cream/90 focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2"
-            >
-              <ZoomIn className="h-5 w-5" />
-              Perbesar
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              aria-label="Atur ulang zoom"
-              disabled={zoom <= 100}
-              onClick={resetView}
-              className="h-11 min-h-11 min-w-11 bg-cream text-emerald hover:bg-cream/90 focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2"
-            >
-              <RotateCcw className="h-5 w-5" />
-              Atur ulang zoom
-            </Button>
-            <Button
-              type="button"
-              aria-label="Tutup preview"
-              onClick={closeDialog}
-              className="h-11 min-h-11 min-w-11 bg-gold text-brown hover:bg-gold/90 focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2"
-            >
-              <X className="h-5 w-5" />
-              Tutup preview
-            </Button>
-          </div>
-        </DialogContent>
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-3">
+          <Button
+            type="button"
+            variant="outline"
+            aria-label="Perkecil"
+            disabled={zoom <= 100}
+            onClick={() => changeZoom(-ZOOM_STEP)}
+            className="h-11 min-h-11 min-w-11 bg-cream text-emerald hover:bg-cream/90 focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2"
+          >
+            <ZoomOut className="h-5 w-5" />
+            Perkecil
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            aria-label="Perbesar"
+            disabled={zoom >= MAX_ZOOM}
+            onClick={() => changeZoom(ZOOM_STEP)}
+            className="h-11 min-h-11 min-w-11 bg-cream text-emerald hover:bg-cream/90 focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2"
+          >
+            <ZoomIn className="h-5 w-5" />
+            Perbesar
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            aria-label="Atur ulang zoom"
+            disabled={zoom <= 100}
+            onClick={resetView}
+            className="h-11 min-h-11 min-w-11 bg-cream text-emerald hover:bg-cream/90 focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2"
+          >
+            <RotateCcw className="h-5 w-5" />
+            Atur ulang zoom
+          </Button>
+          <Button
+            type="button"
+            aria-label="Tutup preview"
+            onClick={closeDialog}
+            className="h-11 min-h-11 min-w-11 bg-gold text-brown hover:bg-gold/90 focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2"
+          >
+            <X className="h-5 w-5" />
+            Tutup preview
+          </Button>
+        </div>
+      </DialogContent>
       </div>
     </Dialog>
   );
