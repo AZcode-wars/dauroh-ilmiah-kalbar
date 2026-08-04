@@ -31,7 +31,13 @@ import {
 } from "@/components/ui/alert-dialog";
 
 // Tabel daftar peserta dengan fitur filter, search, detail, dan hapus
-export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { onFilterOpenChange?: (open: boolean) => void; scrollOnFilter?: boolean }) {
+export default function PesertaTable({
+  onFilterOpenChange,
+  scrollOnFilter,
+}: {
+  onFilterOpenChange?: (open: boolean) => void;
+  scrollOnFilter?: boolean;
+}) {
   const [peserta, setPeserta] = useState<Peserta[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Peserta | null>(null);
@@ -72,7 +78,9 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
     }
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [filters]);
 
   function handleFilter(f: FilterValues) {
@@ -112,8 +120,8 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
                   is_hadir: target,
                   hadir_at: target ? new Date().toISOString() : null,
                 }
-              : x
-          )
+              : x,
+          ),
         );
         window.dispatchEvent(new Event("kehadiran-updated"));
       }
@@ -125,16 +133,23 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
   }
 
   return (
-    <div className={`flex flex-col gap-4 ${scrollOnFilter ? "" : "flex-1 min-h-0"}`}>
+    <div
+      className={`flex flex-col gap-4 ${scrollOnFilter ? "" : "flex-1 min-h-0"}`}
+    >
       <div className="shrink-0">
-        <FilterBar onFilter={handleFilter} onFilterOpenChange={onFilterOpenChange} />
+        <FilterBar
+          onFilter={handleFilter}
+          onFilterOpenChange={onFilterOpenChange}
+        />
       </div>
 
-      <div className={`rounded-lg border border-[#e2e8f0] bg-white relative ${scrollOnFilter ? "" : "flex-1 min-h-0 overflow-auto scrollbar-thin"}`}>
+      <div
+        className={`rounded-lg border border-[#e2e8f0] bg-white relative  ${scrollOnFilter ? "" : "flex-1 min-h-0 overflow-auto scrollbar-thin"}`}
+      >
         <Table>
           <TableHeader className="sticky top-0 z-10 shadow-[0_1px_0_0_#e2e8f0]">
             <TableRow className="bg-gray-50">
-              <TableHead className="w-10 text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
+              <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
                 No
               </TableHead>
               <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
@@ -161,7 +176,7 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
               <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
                 Tgl Daftar
               </TableHead>
-              <TableHead className="w-24 text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
+              <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
                 Aksi
               </TableHead>
             </TableRow>
@@ -175,7 +190,10 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
               </TableRow>
             ) : peserta.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={10} className="py-12 text-center text-sm text-muted-foreground">
+                <TableCell
+                  colSpan={10}
+                  className="py-12 text-center text-sm text-muted-foreground"
+                >
                   Belum ada peserta
                 </TableCell>
               </TableRow>
@@ -186,9 +204,15 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
                   className="cursor-pointer hover:bg-emerald/5"
                   onClick={() => openDetail(p)}
                 >
-                  <TableCell className="text-xs text-muted-foreground">{i + 1}</TableCell>
-                  <TableCell className="text-sm font-medium text-gray-800">{p.nama}</TableCell>
-                  <TableCell className="font-mono text-xs">{p.nomor_wa}</TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    {i + 1}
+                  </TableCell>
+                  <TableCell className="text-sm font-medium text-gray-800">
+                    {p.nama}
+                  </TableCell>
+                  <TableCell className="font-mono text-xs">
+                    {p.nomor_wa}
+                  </TableCell>
                   <TableCell className="text-sm">{p.asal}</TableCell>
                   <TableCell>
                     <Badge
@@ -215,10 +239,16 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
                     </Badge>
                   </TableCell>
                   <TableCell className="font-mono text-sm font-medium">
-                    {getPesertaHeadcount(p.membawa_rombongan, p.jumlah_rombongan)}
+                    {getPesertaHeadcount(
+                      p.membawa_rombongan,
+                      p.jumlah_rombongan,
+                    )}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                    <div
+                      className="flex items-center justify-center gap-1"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Badge
                         variant="secondary"
                         className={
@@ -248,7 +278,10 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
                     {formatToWIB(p.created_at)}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                    <div
+                      className="flex items-center justify-center gap-1"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Button
                         variant="ghost"
                         size="icon"
@@ -302,7 +335,7 @@ export default function PesertaTable({ onFilterOpenChange, scrollOnFilter }: { o
           onDeleted={() => setFilters((prev) => ({ ...prev }))}
           onUpdated={(updated) => {
             setPeserta((prev) =>
-              prev.map((x) => (x.id === updated.id ? updated : x))
+              prev.map((x) => (x.id === updated.id ? updated : x)),
             );
             setSelected(updated);
             window.dispatchEvent(new Event("kehadiran-updated"));

@@ -76,7 +76,7 @@ export default function TrashTable() {
       <Table>
         <TableHeader className="sticky top-0 z-10 shadow-[0_1px_0_0_#e2e8f0]">
           <TableRow className="bg-gray-50">
-            <TableHead className="w-10 text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
+            <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
               No
             </TableHead>
             <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
@@ -88,7 +88,7 @@ export default function TrashTable() {
             <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
               Dihapus Pada
             </TableHead>
-            <TableHead className="w-32 text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
+            <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
               Aksi
             </TableHead>
           </TableRow>
@@ -116,7 +116,7 @@ export default function TrashTable() {
                   {formatToWIB(p.deleted_at)}
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center justify-center gap-1">
                     <Button
                       variant="ghost"
                       size="sm"
