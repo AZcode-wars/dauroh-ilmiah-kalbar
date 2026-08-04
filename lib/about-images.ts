@@ -5,6 +5,7 @@ import type { AboutImage } from "@/types/about-image";
 export const ABOUT_IMAGES_BUCKET = "about-images";
 export const ABOUT_IMAGE_LIMIT = 10;
 export const ABOUT_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+export const ABOUT_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 
 export const FALLBACK_ABOUT_IMAGE: AboutImage = {
   id: "fallback-about-poster",

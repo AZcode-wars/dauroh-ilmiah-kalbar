@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { ChangeEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Loader2, Upload, ArrowUp, ArrowDown, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,8 +14,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ABOUT_IMAGE_LIMIT } from "@/lib/about-images";
+import {
+  ABOUT_IMAGE_LIMIT,
+  ABOUT_IMAGE_MAX_BYTES,
+  ABOUT_IMAGE_TYPES,
+} from "@/lib/about-images";
 import type { AboutImage } from "@/types/about-image";
+import ImageDropzone from "@/components/admin/ImageDropzone";
+import PendingFileCard from "@/components/admin/PendingFileCard";
 
 type PendingFile = {
   key: string;
@@ -63,6 +66,8 @@ export default function AboutGalleryManager() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [progress, setProgress] = useState<number | null>(null);
+  const progressTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -83,23 +88,43 @@ export default function AboutGalleryManager() {
       .finally(() => setLoading(false));
   }, []);
 
-  function handleFilesSelected(e: ChangeEvent<HTMLInputElement>) {
-    const input = e.target;
-    const selected = Array.from(input.files ?? []);
-    input.value = "";
+  useEffect(() => {
+    return () => {
+      if (progressTimer.current !== null) clearInterval(progressTimer.current);
+    };
+  }, []);
 
-    const sisa = ABOUT_IMAGE_LIMIT - images.length;
-    if (selected.length > sisa) {
+  function handleFilesSelected(files: File[]) {
+    const validTypes = new Set<string>(ABOUT_IMAGE_TYPES);
+    const sisa = Math.max(
+      0,
+      ABOUT_IMAGE_LIMIT - images.length - pendingFiles.length,
+    );
+
+    const invalid = files.filter(
+      (file) => !validTypes.has(file.type) || file.size > ABOUT_IMAGE_MAX_BYTES,
+    );
+    if (invalid.length > 0) {
+      setMessage({
+        type: "error",
+        text: "Hanya gambar JPG, PNG, atau WebP dengan maksimal 5MB yang dapat diunggah",
+      });
+    }
+
+    const acceptable = files.filter(
+      (file) => validTypes.has(file.type) && file.size <= ABOUT_IMAGE_MAX_BYTES,
+    );
+    const accepted = acceptable.slice(0, sisa);
+
+    if (accepted.length === 0) return;
+
+    if (acceptable.length > sisa) {
       setMessage({
         type: "error",
         text: `Hanya ${sisa} gambar yang dapat ditambahkan`,
       });
     }
 
-    const accepted = selected.slice(0, sisa);
-    if (accepted.length === 0) return;
-
-    setMessage(null);
     setPendingFiles((prev) => [
       ...prev,
       ...accepted.map((file) => ({
@@ -116,10 +141,24 @@ export default function AboutGalleryManager() {
     );
   }
 
+  function removePending(key: string) {
+    setPendingFiles((prev) => prev.filter((pending) => pending.key !== key));
+  }
+
   async function handleUpload() {
     if (pendingFiles.length === 0 || uploading) return;
     setUploading(true);
     setMessage(null);
+    setProgress(0);
+
+    const timer = setInterval(() => {
+      setProgress((prev) => {
+        if (prev === null) return prev;
+        const next = prev + 5 + Math.random() * 10;
+        return next >= 95 ? 95 : next;
+      });
+    }, 300);
+    progressTimer.current = timer;
 
     try {
       const formData = new FormData();
@@ -135,6 +174,9 @@ export default function AboutGalleryManager() {
       const json = await res.json();
 
       if (!res.ok || !json?.success) {
+        clearInterval(timer);
+        progressTimer.current = null;
+        setProgress(null);
         setMessage({
           type: "error",
           text: json?.message || "Gagal mengunggah gambar",
@@ -144,17 +186,27 @@ export default function AboutGalleryManager() {
 
       const parsed = parseAboutImages(json?.data);
       if (!parsed) {
+        clearInterval(timer);
+        progressTimer.current = null;
+        setProgress(null);
         setMessage({ type: "error", text: "Gagal mengunggah gambar" });
         return;
       }
 
+      clearInterval(timer);
+      progressTimer.current = null;
       setImages((prev) => [...prev, ...parsed]);
       setPendingFiles([]);
+      setProgress(100);
+      setTimeout(() => setProgress(null), 400);
       setMessage({
         type: "success",
         text: json?.message || "Gambar galeri berhasil diunggah",
       });
     } catch {
+      clearInterval(timer);
+      progressTimer.current = null;
+      setProgress(null);
       setMessage({ type: "error", text: "Gagal mengunggah gambar" });
     } finally {
       setUploading(false);
@@ -273,42 +325,38 @@ export default function AboutGalleryManager() {
         </div>
       )}
 
-      <div className="space-y-3">
-        <Label
-          htmlFor="about-images"
-          className="text-sm font-semibold text-gray-700"
-        >
-          Pilih gambar galeri
-        </Label>
-        <Input
-          id="about-images"
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          multiple
-          aria-label="Pilih gambar galeri"
-          onChange={handleFilesSelected}
-        />
-      </div>
+      <ImageDropzone
+        onFilesSelected={handleFilesSelected}
+        disabled={uploading || images.length >= ABOUT_IMAGE_LIMIT}
+      />
 
       {pendingFiles.length > 0 && (
         <div className="space-y-3">
           {pendingFiles.map((pending, index) => (
-            <div key={pending.key} className="space-y-2">
-              <Label
-                htmlFor={`alt-${pending.key}`}
-                className="text-sm font-semibold text-gray-700"
-              >
-                Deskripsi gambar {index + 1}
-              </Label>
-              <Input
-                id={`alt-${pending.key}`}
-                type="text"
-                value={pending.altText}
-                onChange={(e) => updatePendingAlt(pending.key, e.target.value)}
-                placeholder="Tulis deskripsi singkat gambar ini"
-              />
-            </div>
+            <PendingFileCard
+              key={pending.key}
+              file={pending.file}
+              altText={pending.altText}
+              index={index}
+              disabled={uploading}
+              onAltChange={(value) => updatePendingAlt(pending.key, value)}
+              onRemove={() => removePending(pending.key)}
+            />
           ))}
+
+          {progress !== null && (
+            <div className="space-y-1">
+              <div className="h-2 w-full overflow-hidden rounded-full bg-emerald/10">
+                <div
+                  className="h-full rounded-full bg-emerald transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Mengunggah... {Math.round(progress)}%
+              </p>
+            </div>
+          )}
 
           <Button
             onClick={handleUpload}
@@ -326,7 +374,9 @@ export default function AboutGalleryManager() {
       )}
 
       {images.length === 0 && (
-        <p className="text-sm text-muted-foreground">Belum ada gambar galeri</p>
+        <p className="text-sm text-muted-foreground">
+          Belum ada gambar yang diunggah
+        </p>
       )}
 
       <ul className="space-y-3">
