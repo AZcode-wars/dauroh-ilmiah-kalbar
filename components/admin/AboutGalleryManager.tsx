@@ -63,7 +63,10 @@ export default function AboutGalleryManager() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/about-images")
@@ -87,7 +90,10 @@ export default function AboutGalleryManager() {
 
     const sisa = ABOUT_IMAGE_LIMIT - images.length;
     if (selected.length > sisa) {
-      setMessage({ type: "error", text: `Hanya ${sisa} gambar yang dapat ditambahkan` });
+      setMessage({
+        type: "error",
+        text: `Hanya ${sisa} gambar yang dapat ditambahkan`,
+      });
     }
 
     const accepted = selected.slice(0, sisa);
@@ -96,12 +102,18 @@ export default function AboutGalleryManager() {
     setMessage(null);
     setPendingFiles((prev) => [
       ...prev,
-      ...accepted.map((file) => ({ key: crypto.randomUUID(), file, altText: "" })),
+      ...accepted.map((file) => ({
+        key: crypto.randomUUID(),
+        file,
+        altText: "",
+      })),
     ]);
   }
 
   function updatePendingAlt(key: string, altText: string) {
-    setPendingFiles((prev) => prev.map((p) => (p.key === key ? { ...p, altText } : p)));
+    setPendingFiles((prev) =>
+      prev.map((p) => (p.key === key ? { ...p, altText } : p)),
+    );
   }
 
   async function handleUpload() {
@@ -123,7 +135,10 @@ export default function AboutGalleryManager() {
       const json = await res.json();
 
       if (!res.ok || !json?.success) {
-        setMessage({ type: "error", text: json?.message || "Gagal mengunggah gambar" });
+        setMessage({
+          type: "error",
+          text: json?.message || "Gagal mengunggah gambar",
+        });
         return;
       }
 
@@ -135,7 +150,10 @@ export default function AboutGalleryManager() {
 
       setImages((prev) => [...prev, ...parsed]);
       setPendingFiles([]);
-      setMessage({ type: "success", text: json?.message || "Gambar galeri berhasil diunggah" });
+      setMessage({
+        type: "success",
+        text: json?.message || "Gambar galeri berhasil diunggah",
+      });
     } catch {
       setMessage({ type: "error", text: "Gagal mengunggah gambar" });
     } finally {
@@ -154,7 +172,10 @@ export default function AboutGalleryManager() {
 
     const snapshot = images;
     const nextImages = [...images];
-    [nextImages[index], nextImages[target]] = [nextImages[target], nextImages[index]];
+    [nextImages[index], nextImages[target]] = [
+      nextImages[target],
+      nextImages[index],
+    ];
     setImages(nextImages);
 
     try {
@@ -167,11 +188,17 @@ export default function AboutGalleryManager() {
 
       if (!res.ok || !json?.success) {
         setImages(snapshot);
-        setMessage({ type: "error", text: json?.message || "Gagal menyimpan urutan" });
+        setMessage({
+          type: "error",
+          text: json?.message || "Gagal menyimpan urutan",
+        });
         return;
       }
 
-      setMessage({ type: "success", text: json?.message || "Urutan galeri berhasil disimpan" });
+      setMessage({
+        type: "success",
+        text: json?.message || "Urutan galeri berhasil disimpan",
+      });
     } catch {
       setImages(snapshot);
       setMessage({ type: "error", text: "Gagal menyimpan urutan" });
@@ -186,16 +213,24 @@ export default function AboutGalleryManager() {
     setMessage(null);
 
     try {
-      const res = await fetch(`/api/admin/about-images/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/admin/about-images/${id}`, {
+        method: "DELETE",
+      });
       const json = await res.json();
 
       if (!res.ok || !json?.success) {
-        setMessage({ type: "error", text: json?.message || "Gagal menghapus gambar" });
+        setMessage({
+          type: "error",
+          text: json?.message || "Gagal menghapus gambar",
+        });
         return;
       }
 
       setImages((prev) => prev.filter((image) => image.id !== id));
-      setMessage({ type: "success", text: json?.message || "Gambar galeri berhasil dihapus" });
+      setMessage({
+        type: "success",
+        text: json?.message || "Gambar galeri berhasil dihapus",
+      });
     } catch {
       setMessage({ type: "error", text: "Gagal menghapus gambar" });
     } finally {
@@ -204,7 +239,8 @@ export default function AboutGalleryManager() {
   }
 
   const canUpload =
-    pendingFiles.length > 0 && pendingFiles.every((p) => p.altText.trim().length > 0);
+    pendingFiles.length > 0 &&
+    pendingFiles.every((p) => p.altText.trim().length > 0);
 
   if (loading) {
     return (
@@ -218,7 +254,7 @@ export default function AboutGalleryManager() {
     <div className="space-y-4 rounded-lg border border-[#e2e8f0] bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
       <div className="flex items-center justify-between gap-4">
         <h2 className="font-serif text-lg font-bold text-emerald">
-          Galeri About
+          Input Gambar Poster
           <span className="ml-2 text-sm font-normal text-muted-foreground">
             {images.length}/{ABOUT_IMAGE_LIMIT} gambar
           </span>
@@ -238,7 +274,10 @@ export default function AboutGalleryManager() {
       )}
 
       <div className="space-y-3">
-        <Label htmlFor="about-images" className="text-sm font-semibold text-gray-700">
+        <Label
+          htmlFor="about-images"
+          className="text-sm font-semibold text-gray-700"
+        >
           Pilih gambar galeri
         </Label>
         <Input
@@ -305,8 +344,12 @@ export default function AboutGalleryManager() {
                 className="h-16 w-16 shrink-0 rounded-md object-cover"
               />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-gray-800">{image.alt_text}</p>
-                <p className="text-xs text-muted-foreground">Urutan {index + 1}</p>
+                <p className="truncate text-sm font-medium text-gray-800">
+                  {image.alt_text}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Urutan {index + 1}
+                </p>
               </div>
 
               {isBusy ? (
@@ -348,8 +391,8 @@ export default function AboutGalleryManager() {
                           Hapus Gambar Galeri?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                          Gambar ini akan dihapus permanen dari galeri About. Tindakan ini tidak
-                          dapat dibatalkan.
+                          Gambar ini akan dihapus permanen dari galeri About.
+                          Tindakan ini tidak dapat dibatalkan.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
@@ -359,7 +402,11 @@ export default function AboutGalleryManager() {
                           disabled={isBusy}
                           className="gap-2 bg-red-600 hover:bg-red-700"
                         >
-                          {isBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Ya, Hapus"}
+                          {isBusy ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            "Ya, Hapus"
+                          )}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>

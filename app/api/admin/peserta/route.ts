@@ -22,7 +22,9 @@ export async function GET(request: Request) {
     });
 
     return NextResponse.json({ data });
-  } catch {
+  } catch (error: unknown) {
+    // Mencatat error asli untuk debugging di log server (Cloudflare Logs / wrangler tail)
+    console.error("Gagal mengambil daftar peserta:", error);
     const body: ApiError = { success: false, message: "Terjadi kesalahan sistem" };
     return NextResponse.json(body, { status: 500 });
   }
@@ -63,6 +65,8 @@ export async function POST(request: Request) {
       return NextResponse.json(body, { status: 409 });
     }
 
+    // Mencatat error asli untuk debugging di log server (Cloudflare Logs / wrangler tail)
+    console.error("Gagal menambahkan peserta:", error);
     const body: ApiError = { success: false, message: "Terjadi kesalahan sistem" };
     return NextResponse.json(body, { status: 500 });
   }
