@@ -1,0 +1,224 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "onMatchHeaders": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/api/admin/about-images/[id]",
+      "regex": "^/api/admin/about\\-images/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/about\\-images/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/admin/peserta/[id]",
+      "regex": "^/api/admin/peserta/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/peserta/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/admin/peserta/[id]/kehadiran",
+      "regex": "^/api/admin/peserta/([^/]+?)/kehadiran(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/peserta/(?<nxtPid>[^/]+?)/kehadiran(?:/)?$"
+    },
+    {
+      "page": "/api/admin/peserta/[id]/permanent",
+      "regex": "^/api/admin/peserta/([^/]+?)/permanent(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/peserta/(?<nxtPid>[^/]+?)/permanent(?:/)?$"
+    },
+    {
+      "page": "/api/admin/peserta/[id]/restore",
+      "regex": "^/api/admin/peserta/([^/]+?)/restore(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/peserta/(?<nxtPid>[^/]+?)/restore(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/admin/dashboard",
+      "regex": "^/admin/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/dashboard(?:/)?$"
+    },
+    {
+      "page": "/admin/dashboard/kehadiran",
+      "regex": "^/admin/dashboard/kehadiran(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/dashboard/kehadiran(?:/)?$"
+    },
+    {
+      "page": "/admin/dashboard/settings",
+      "regex": "^/admin/dashboard/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/dashboard/settings(?:/)?$"
+    },
+    {
+      "page": "/admin/dashboard/trash",
+      "regex": "^/admin/dashboard/trash(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/dashboard/trash(?:/)?$"
+    },
+    {
+      "page": "/admin/login",
+      "regex": "^/admin/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/login(?:/)?$"
+    },
+    {
+      "page": "/api/admin/about-images",
+      "regex": "^/api/admin/about\\-images(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/about\\-images(?:/)?$"
+    },
+    {
+      "page": "/api/admin/about-images/order",
+      "regex": "^/api/admin/about\\-images/order(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/about\\-images/order(?:/)?$"
+    },
+    {
+      "page": "/api/admin/peserta",
+      "regex": "^/api/admin/peserta(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/peserta(?:/)?$"
+    },
+    {
+      "page": "/api/admin/peserta/all",
+      "regex": "^/api/admin/peserta/all(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/peserta/all(?:/)?$"
+    },
+    {
+      "page": "/api/admin/peserta/export/csv",
+      "regex": "^/api/admin/peserta/export/csv(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/peserta/export/csv(?:/)?$"
+    },
+    {
+      "page": "/api/admin/peserta/summary",
+      "regex": "^/api/admin/peserta/summary(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/peserta/summary(?:/)?$"
+    },
+    {
+      "page": "/api/admin/peserta/trash",
+      "regex": "^/api/admin/peserta/trash(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/peserta/trash(?:/)?$"
+    },
+    {
+      "page": "/api/admin/settings",
+      "regex": "^/api/admin/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/settings(?:/)?$"
+    },
+    {
+      "page": "/api/auth/login",
+      "regex": "^/api/auth/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/login(?:/)?$"
+    },
+    {
+      "page": "/api/auth/logout",
+      "regex": "^/api/auth/logout(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/logout(?:/)?$"
+    },
+    {
+      "page": "/api/peserta/register",
+      "regex": "^/api/peserta/register(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/peserta/register(?:/)?$"
+    },
+    {
+      "page": "/api/settings",
+      "regex": "^/api/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/settings(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/register",
+      "regex": "^/register(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/register(?:/)?$"
+    },
+    {
+      "page": "/register/success",
+      "regex": "^/register/success(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/register/success(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}
