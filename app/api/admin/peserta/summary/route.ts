@@ -12,7 +12,9 @@ export async function GET() {
   try {
     const summary = await getSummary();
     return NextResponse.json(summary);
-  } catch {
+  } catch (error: unknown) {
+    // Mencatat error asli untuk debugging di log server (Cloudflare Logs / wrangler tail)
+    console.error("Gagal mengambil ringkasan peserta:", error);
     const body: ApiError = { success: false, message: "Terjadi kesalahan sistem" };
     return NextResponse.json(body, { status: 500 });
   }
