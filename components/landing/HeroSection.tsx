@@ -54,7 +54,7 @@ export function HeroSection({ contactWa }: HeroSectionProps) {
 
   const waUrl = buildWhatsAppUrl(
     contactWa,
-    "Assalamu'alaikum, saya ingin bertanya tentang Dauroh Manis Raya",
+    "Assalamu'alaikum, saya ingin bertanya tentang Dauroh Ilmiah Kalbar yang diadakan di Sintang, Manis Raya...",
   );
 
   return (
@@ -133,7 +133,7 @@ export function HeroSection({ contactWa }: HeroSectionProps) {
             </svg>
 
             <span className="font-serif font-semibold text-lg tracking-wide ">
-              Dauroh Manis Raya
+              Dauroh Ilmiah Kalbar
             </span>
           </Link>
         </div>
@@ -190,7 +190,7 @@ export function HeroSection({ contactWa }: HeroSectionProps) {
               <path d="M 247.503 12.477 C 248.315 12.477 249.127 12.477 249.965 12.477 C 250.476 15.159 250.986 17.84 251.513 20.602 C 258.886 56.939 271.13 84.987 299.2 111.527 C 301.044 113.296 302.887 115.067 304.789 116.89 C 306.896 118.904 306.896 118.904 309.047 120.96 C 294.276 116.244 294.276 116.244 289.488 114.437 C 263.196 104.959 232.717 103.363 206.576 114.208 C 200.729 116.244 200.729 116.244 193.344 113.885 C 195.832 112.086 198.318 110.286 200.884 108.433 C 229.889 84.463 240.905 47.218 247.503 12.477 Z" />
             </svg>
             <span className="font-serif font-semibold text-lg tracking-wide">
-              Dauroh Manis Raya
+              Dauroh Ilmiah Kalbar
             </span>
           </Link>
 

@@ -59,7 +59,7 @@ export default async function HomePage() {
             className="shrink-0 items-center "
           />
           <span className="font-serif text-cream/80 font-semibold tracking-wide">
-            Dauroh Manis Raya
+            Dauroh Ilmiah Kalbar
           </span>
         </div>
 
