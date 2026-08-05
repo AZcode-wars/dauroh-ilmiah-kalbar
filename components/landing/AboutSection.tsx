@@ -13,22 +13,25 @@ export function AboutSection({ images }: AboutSectionProps) {
       </p>
 
       <h2 className="font-serif text-3xl md:text-4xl font-bold text-emerald leading-snug mb-6 text-center">
-        Membangun Jiwa, <span className="text-brown">Mempererat Ukhuwah</span>
+        Dauroh Ilmiah <span className="text-brown">Kalimantan Barat</span>
       </h2>
       <div className="max-w-5xl mx-auto md:gap-12 items-center">
         <div className="bg-white rounded-2xl grid md:grid-cols-2 gap-8 p-8 md:p-10 shadow-[0_4px_20px_rgba(0,53,39,0.08)]">
           <div className="text">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-emerald leading-snug mb-6 ">
-              Event Rutinan, <span className="text-brown">Setahun Sekali</span>
+              Transaksi Syariah Tanpa Riba{" "}
+              <span className="text-brown">di Era Digital</span>
             </h2>
             <p className="text-emerald/70 font-sans text-lg leading-9 my-auto text-justify">
-              Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-              commodo ligula eget dolor. Aenean massa. Cum sociis natoque
-              penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-              Donec quam felis, ultricies nec, pellentesque eu, pretium quis,
-              sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
-              vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,
-              imperdiet a, venenatis vitae, justo.
+              Sebuah sarana ilmiah untuk memahami fikih muamalah, menjaga harta
+              dari jerat riba, serta meluruskan transaksi di era modern sesuai
+              syariat Islam. <br /> <br />{" "}
+              <em>
+                &quot;Janganlah seseorang berdagang di pasar kami kecuali ia
+                memahami fikih muamalah. Jika tidak, ia akan terjatuh memakan
+                riba.&quot; — Ucapan Umar bin Khattab radhiyallahu &apos;anhu
+                (Mughni al-Muhtaj, Al-Khathib Asy-Syirbini)
+              </em>
             </p>
           </div>
           <AboutImageGallery images={images} />

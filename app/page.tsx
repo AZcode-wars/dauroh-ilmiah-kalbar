@@ -8,7 +8,8 @@ import { CTASection } from "@/components/landing/CTASection";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { getSettings } from "@/lib/settings";
 import { getAboutImages } from "@/lib/about-images";
-import { LibraryBig } from "lucide-react";
+// import { LibraryBig } from "lucide-react";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -48,7 +49,15 @@ export default async function HomePage() {
 
       <footer className="py-8 bg-emerald text-center">
         <div className="flex items-center justify-center gap-2 text-cream/60 text-sm mb-2">
-          <LibraryBig size={15} />
+          {/* <LibraryBig size={15} /> */}
+          <Image
+            src="/logo_dauroh.svg"
+            alt="Logo Dauroh Manis Raya"
+            width={15}
+            height={15}
+            priority
+            className="shrink-0 items-center "
+          />
           <span className="font-serif text-cream/80 font-semibold tracking-wide">
             Dauroh Manis Raya
           </span>

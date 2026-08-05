@@ -1,79 +1,24 @@
+import { Utensils, BedDouble, SquareParking, Hamburger } from "lucide-react";
 const fasilitas = [
   {
-    icon: (
-      <svg
-        className="w-8 h-8"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-    ),
-    title: "Konsumsi",
-    desc: "Hidangan sehat 3x sehari selama acara berlangsung.",
+    icon: <Utensils className="w-8 h-8" />,
+    title: "Konsumsi Gratis",
+    desc: "Hidangan gratis 3x sehari selama acara berlangsung.",
   },
   {
-    icon: (
-      <svg
-        className="w-8 h-8"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-        />
-      </svg>
-    ),
+    icon: <BedDouble className="w-8 h-8" />,
     title: "Penginapan Pondok",
-    desc: "Fasilitas asrama bersih dan sejuk khas pondok.",
+    desc: "Fasilitas menginap tersedia untuk peserta.",
   },
   {
-    icon: (
-      <svg
-        className="w-8 h-8"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
-        />
-      </svg>
-    ),
+    icon: <SquareParking className="w-8 h-8" />,
     title: "Area Parkir",
-    desc: "Parkir luas untuk motor dan mobil pribadi.",
+    desc: "Area parkir untuk motor dan mobil peserta.",
   },
   {
-    icon: (
-      <svg
-        className="w-8 h-8"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
-        />
-      </svg>
-    ),
-    title: "Bantuan Panitia",
-    desc: "Siap melayani kebutuhan peserta 24 jam.",
+    icon: <Hamburger className="w-8 h-8" />,
+    title: "Snack dan Kopi",
+    desc: "Tersedia snack dan kopi selama acara berlangsung.",
   },
 ];
 

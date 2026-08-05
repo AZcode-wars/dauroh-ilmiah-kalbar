@@ -1,6 +1,6 @@
 "use client";
 
-import { Map } from "lucide-react";
+import { Map, MapPinned } from "lucide-react";
 
 export function LokasiSection() {
   return (
@@ -20,25 +20,7 @@ export function LokasiSection() {
           <div className="flex flex-col md:flex-row gap-8">
             <div className="flex-1">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald/5 text-emerald mb-5">
-                <svg
-                  className="w-7 h-7"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
+                <MapPinned className="w-8 h-8" />
               </div>
 
               <h3 className="font-serif text-xl font-semibold text-emerald mb-3">
@@ -49,11 +31,6 @@ export function LokasiSection() {
                 X5MF+F5H, Dusun Lepung kedang Desa, RT./Rw/RW.018/009, Manis
                 Raya, Kec. Sepauk, Kabupaten Sintang, Kalimantan Barat 78662,
                 Indonesia
-                {/* Jl. Manis Raya No. 123, Desa Sejahtera,
-                <br />
-                Kecamatan Damai, Jawa Barat 40123.
-                <br />
-                (Sekitar 30 menit dari Stasiun Pusat Kota) */}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3">
