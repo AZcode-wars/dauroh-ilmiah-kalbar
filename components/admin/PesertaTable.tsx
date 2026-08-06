@@ -167,6 +167,9 @@ export default function PesertaTable() {
                 Nomor Kendaraan
               </TableHead>
               <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
+                Jenis Kelamin
+              </TableHead>
+              <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
                 Hadir
               </TableHead>
               <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
@@ -180,14 +183,14 @@ export default function PesertaTable() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={11} className="py-12 text-center">
+                <TableCell colSpan={12} className="py-12 text-center">
                   <Loader2 className="mx-auto h-5 w-5 animate-spin text-muted-foreground" />
                 </TableCell>
               </TableRow>
             ) : peserta.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={11}
+                  colSpan={12}
                   className="py-12 text-center text-sm text-muted-foreground"
                 >
                   <FileQuestionMark className="mx-auto h-10 w-10 text-muted-foreground mb-2" />
@@ -245,6 +248,18 @@ export default function PesertaTable() {
                   </TableCell>
                   <TableCell className="font-mono text-xs">
                     {p.nomor_kendaraan ?? "-"}
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="secondary"
+                      className={
+                        p.jenis_kelamin === "ikhwan"
+                          ? "bg-emerald/10 text-emerald"
+                          : "bg-gold/10 text-brown"
+                      }
+                    >
+                      {p.jenis_kelamin === "ikhwan" ? "Ikhwan" : "Akhwat"}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     <div

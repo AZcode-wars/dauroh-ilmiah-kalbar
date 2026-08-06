@@ -33,6 +33,10 @@ export function buildConfirmationRows(peserta: Peserta): Array<{ label: string; 
     { label: "Nama", value: peserta.nama },
     { label: "Nomor WA", value: peserta.nomor_wa },
     { label: "Asal", value: asalLabel },
+    {
+      label: "Jenis Kelamin",
+      value: peserta.jenis_kelamin === "ikhwan" ? "Ikhwan Dewasa" : "Akhwat Dewasa",
+    },
     { label: "Menginap", value: peserta.menginap ? "Ya" : "Tidak" },
     { label: "Rombongan", value: rombonganValue },
     ...(peserta.membawa_rombongan

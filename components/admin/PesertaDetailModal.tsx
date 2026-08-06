@@ -143,6 +143,10 @@ export default function PesertaDetailModal({
           <div className="grid grid-cols-2 gap-3 rounded-lg border border-[#e2e8f0] bg-gray-50/50 p-4">
             <DataRow label="Nomor WA" value={peserta.nomor_wa} />
             <DataRow label="Asal" value={peserta.asal} />
+            <DataRow
+              label="Jenis Kelamin"
+              value={peserta.jenis_kelamin === "ikhwan" ? "Ikhwan Dewasa" : "Akhwat Dewasa"}
+            />
             <DataRow label="Headcount" value={`${headcount} orang`} />
             <DataRow
               label="Keberangkatan"

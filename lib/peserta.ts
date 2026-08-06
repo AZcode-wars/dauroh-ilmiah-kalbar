@@ -205,13 +205,25 @@ export async function getSummary(): Promise<{
     );
     total_headcount += headcount;
 
-    total_ikhwan_dewasa += p.rombongan_ikhwan_dewasa;
+    // Pendaftar sendiri +1 ke kategori gender-nya (ikhwan atau akhwat dewasa),
+    // kecuali pendaftar asatidzah (sudah dihitung terpisah pada total_asatidzah)
+    if (!p.is_asatidzah) {
+      if (p.jenis_kelamin === "ikhwan") {
+        total_ikhwan_dewasa += 1;
+      } else {
+        total_akhwat_dewasa += 1;
+      }
+    }
+
+    // Asatidzah rombongan dianggap ikhwan, sehingga dikeluarkan dari hitungan ikhwan dewasa
+    total_ikhwan_dewasa += Math.max(0, p.rombongan_ikhwan_dewasa - p.jumlah_asatidzah);
     total_akhwat_dewasa += p.rombongan_akhwat_dewasa;
     total_anak_laki += p.rombongan_ikhwan_anak;
     total_anak_perempuan += p.rombongan_akhwat_anak;
 
     // Asatidzah per peserta = pendaftar (jika centang "saya asatidzah") + rombongan asatidzah.
-    // Asatidzah sudah termasuk dalam angka dewasa, sehingga hanya mengurangi porsi paket makan peserta.
+    // Asatidzah tidak dihitung dalam ikhwan/akhwat dewasa (dikeluarkan di atas) dan
+    // tidak memakai jatah paket makan peserta biasa.
     const asatidzahPeserta = (p.is_asatidzah ? 1 : 0) + p.jumlah_asatidzah;
     total_asatidzah += asatidzahPeserta;
 

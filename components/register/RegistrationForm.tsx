@@ -11,7 +11,11 @@ import {
   canonicalizeRegisterInput,
   type RegisterPesertaOutput,
 } from "@/lib/validations";
-import { KABUPATEN_KALBAR, JENIS_KENDARAAN, PANITIA_KONFIRMASI_WA } from "@/lib/constants";
+import {
+  KABUPATEN_KALBAR,
+  JENIS_KENDARAAN,
+  PANITIA_KONFIRMASI_WA,
+} from "@/lib/constants";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { TimeToggleField } from "@/components/register/TimeToggleField";
 import { Motorbike, CarFront, TramFront } from "lucide-react";
@@ -38,6 +42,7 @@ export function RegistrationForm() {
   } = useForm({
     resolver: zodResolver(registerPesertaSchema),
     defaultValues: {
+      jenis_kelamin: "ikhwan",
       menginap: false,
       membawa_rombongan: false,
       amir_safar: null,
@@ -63,6 +68,7 @@ export function RegistrationForm() {
   const membawaRombongan = watch("membawa_rombongan");
   const jenisKendaraan = watch("jenis_kendaraan");
   const isAsatidzah = watch("is_asatidzah");
+  const jumlahAsatidzah = watch("jumlah_asatidzah");
   const nama = watch("nama");
   const keterangan = watch("keterangan");
 
@@ -193,14 +199,14 @@ export function RegistrationForm() {
           <p className="font-sans text-sm text-emerald/70 leading-relaxed text-justify">
             Peserta yang telah melakukan pendaftaran diharapkan untuk
             mengonfirmasi pendaftarannya kepada panitia sebagai bentuk
-            verifikasi data. Apabila mengalami kesulitan dalam mengisi
-            formulir, silakan hubungi Panitia:
+            verifikasi data. Apabila mengalami kesulitan dalam mengisi formulir,
+            silakan hubungi Panitia:
           </p>
           <p className="font-sans text-sm text-emerald/70">
             <a
               href={buildWhatsAppUrl(
                 PANITIA_KONFIRMASI_WA,
-                "Assalamu'alaikum, saya ingin bertanya tentang pendaftaran Dauroh Ilmiah Kalbar - Manis Raya 2026."
+                "Assalamu'alaikum, saya ingin bertanya tentang pendaftaran Dauroh Ilmiah Kalbar - Manis Raya 2026.",
               )}
               target="_blank"
               rel="noopener noreferrer"
@@ -276,6 +282,24 @@ export function RegistrationForm() {
             )}
           </div>
 
+          <div className="space-y-1">
+            <label className="font-sans text-sm font-semibold text-emerald/80">
+              Jenis Kelamin
+            </label>
+            <select
+              {...register("jenis_kelamin")}
+              className="w-full bg-cream-muted border border-emerald/20 rounded-xl px-4 py-3 font-sans text-sm focus:border-gold focus:ring-2 focus:ring-gold/10 transition-colors appearance-none"
+            >
+              <option value="ikhwan">Ikhwan Dewasa</option>
+              <option value="akhwat">Akhwat Dewasa</option>
+            </select>
+            {errors.jenis_kelamin && (
+              <p className="text-danger font-sans text-xs mt-1">
+                {errors.jenis_kelamin.message}
+              </p>
+            )}
+          </div>
+
           <div className="flex items-center justify-between py-2">
             <span className="font-sans text-sm font-semibold text-emerald/80">
               Menginap selama acara?
@@ -301,8 +325,10 @@ export function RegistrationForm() {
               <span className="font-sans text-sm font-semibold text-emerald/80">
                 Saya asatidzah
               </span>
-              <p className="text-[12px] text-emerald/60 italic mt-1">
-                Asatidzah adalah orang dewasa, tidak menambah jumlah peserta
+              <p className="text-[12px] text-emerald/60 italic mt-1 max-w-72">
+                Asatidzah adalah orang dewasa. Jika diaktifkan, Anda otomatis
+                dihitung sebagai asatidzah (1) dan dikeluarkan dari hitungan
+                Ikhwan/Akhwat Dewasa.
               </p>
             </div>
             <button
@@ -422,8 +448,7 @@ export function RegistrationForm() {
 
               <div className="space-y-1">
                 <label className="font-sans text-sm font-semibold text-emerald/80">
-                  Asatidzah dalam rombongan (subset dari dewasa, tidak menambah
-                  headcount)
+                  Ada berapa asatidzah lain dalam rombongan? (selain Anda)
                 </label>
                 <input
                   type="number"
@@ -433,8 +458,15 @@ export function RegistrationForm() {
                   className="w-full bg-cream-muted border border-emerald/20 rounded-xl px-4 py-3 font-sans text-sm focus:border-gold focus:ring-2 focus:ring-gold/10 transition-colors"
                 />
                 <p className="text-[12px] text-emerald/60 italic mt-1">
-                  Jumlah asatidzah tidak boleh melebihi jumlah orang dewasa
+                  Isi 0 jika tidak ada asatidzah lain dari rombongan. Jumlah
+                  tidak boleh melebihi jumlah orang dewasa.
                 </p>
+                {isAsatidzah && (
+                  <p className="text-[12px] text-emerald font-medium mt-1">
+                    Total asatidzah: {1 + (Number(jumlahAsatidzah) || 0)}{" "}
+                    (termasuk Anda)
+                  </p>
+                )}
                 {errors.jumlah_asatidzah && (
                   <p className="text-danger font-sans text-xs mt-1">
                     {errors.jumlah_asatidzah.message}

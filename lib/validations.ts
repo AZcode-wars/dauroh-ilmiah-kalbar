@@ -10,6 +10,7 @@ export const registerPesertaSchema = z.object({
   nomor_wa: nomorWaSchema,
   menginap: z.boolean(),
   asal: z.enum(KABUPATEN_KALBAR, { message: "Harap Asal diisi terlebih dahulu!" }),
+  jenis_kelamin: z.enum(["ikhwan", "akhwat"], { message: "Harap Jenis Kelamin dipilih!" }),
   membawa_rombongan: z.boolean(),
   amir_safar: z.string().trim().max(100).nullable(),
   driver: z.string().trim().max(100).nullable(),

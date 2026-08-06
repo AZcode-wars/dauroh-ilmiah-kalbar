@@ -2,11 +2,14 @@ export type JenisKendaraan = "motor" | "mobil" | "angkutan_umum";
 
 export type TipeWaktu = "jam_pasti" | "fleksibel";
 
+export type JenisKelamin = "ikhwan" | "akhwat";
+
 // Mendefinisikan tipe data untuk peserta yang digunakan di seluruh aplikasi
 export type Peserta = {
   id: string;
   nama: string;
   nomor_wa: string;
+  jenis_kelamin: JenisKelamin;
   menginap: boolean;
   asal: string;
   membawa_rombongan: boolean;
