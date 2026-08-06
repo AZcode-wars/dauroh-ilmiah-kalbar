@@ -1,18 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import SummaryCards from "@/components/admin/SummaryCards";
 import PesertaTable from "@/components/admin/PesertaTable";
 import ExportCsvButton from "@/components/admin/ExportCsvButton";
 
 // Halaman dashboard utama admin: ringkasan + daftar peserta + ekspor CSV
 export default function DashboardPage() {
-  const [scrollOnFilter, setScrollOnFilter] = useState(false);
-
   return (
-    <div
-      className={`flex flex-col gap-6 animate-in fade-in duration-500 ${scrollOnFilter ? "" : "flex-1 min-h-0"}`}
-    >
+    <div className="flex flex-col gap-6 animate-in fade-in duration-500">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between shrink-0">
         <div>
@@ -32,10 +27,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Tabel Peserta */}
-      <PesertaTable
-        onFilterOpenChange={setScrollOnFilter}
-        scrollOnFilter={scrollOnFilter}
-      />
+      <PesertaTable />
     </div>
   );
 }

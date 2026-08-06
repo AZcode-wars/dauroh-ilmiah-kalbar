@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Undo2, Skull, Loader2 } from "lucide-react";
+import { Undo2, Ban, Loader2, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -50,7 +50,9 @@ export default function TrashTable() {
     }
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   async function handleRestore(id: string) {
@@ -74,7 +76,7 @@ export default function TrashTable() {
   return (
     <div className="flex-1 min-h-0 overflow-auto scrollbar-thin rounded-lg border border-[#e2e8f0] bg-white relative">
       <Table>
-        <TableHeader className="sticky top-0 z-10 shadow-[0_1px_0_0_#e2e8f0]">
+        <TableHeader>
           <TableRow className="bg-gray-50">
             <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
               No
@@ -102,16 +104,26 @@ export default function TrashTable() {
             </TableRow>
           ) : trashed.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="py-12 text-center text-sm text-muted-foreground">
+              <TableCell
+                colSpan={5}
+                className="py-12 text-center text-sm text-muted-foreground"
+              >
+                <Trash2 className="mx-auto h-10 w-10 text-muted-foreground mb-2" />
                 Trash kosong
               </TableCell>
             </TableRow>
           ) : (
             trashed.map((p, i) => (
               <TableRow key={p.id}>
-                <TableCell className="text-xs text-muted-foreground">{i + 1}</TableCell>
-                <TableCell className="text-sm font-medium text-gray-800">{p.nama}</TableCell>
-                <TableCell className="font-mono text-xs">{p.nomor_wa}</TableCell>
+                <TableCell className="text-xs text-muted-foreground">
+                  {i + 1}
+                </TableCell>
+                <TableCell className="text-sm font-medium text-gray-800">
+                  {p.nama}
+                </TableCell>
+                <TableCell className="font-mono text-xs">
+                  {p.nomor_wa}
+                </TableCell>
                 <TableCell className="text-xs text-muted-foreground">
                   {formatToWIB(p.deleted_at)}
                 </TableCell>
@@ -133,7 +145,7 @@ export default function TrashTable() {
                           size="sm"
                           className="h-8 gap-1 text-red-500 hover:text-red-600"
                         >
-                          <Skull className="h-3.5 w-3.5" />
+                          <Ban className="h-3.5 w-3.5" />
                           Hapus
                         </Button>
                       </AlertDialogTrigger>
@@ -141,7 +153,8 @@ export default function TrashTable() {
                         <AlertDialogHeader>
                           <AlertDialogTitle>Hapus Permanen?</AlertDialogTitle>
                           <AlertDialogDescription>
-                            Data {p.nama} akan dihapus secara permanen dan tidak bisa dikembalikan.
+                            Data {p.nama} akan dihapus secara permanen dan tidak
+                            bisa dikembalikan.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>

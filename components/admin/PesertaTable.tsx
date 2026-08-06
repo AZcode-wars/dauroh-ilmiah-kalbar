@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Eye, Trash2, Loader2, ClipboardCheck } from "lucide-react";
+import {
+  Eye,
+  Trash2,
+  Loader2,
+  ClipboardCheck,
+  FileQuestionMark,
+} from "lucide-react";
 import {
   Table,
   TableBody,
@@ -31,13 +37,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 // Tabel daftar peserta dengan fitur filter, search, detail, dan hapus
-export default function PesertaTable({
-  onFilterOpenChange,
-  scrollOnFilter,
-}: {
-  onFilterOpenChange?: (open: boolean) => void;
-  scrollOnFilter?: boolean;
-}) {
+export default function PesertaTable() {
   const [peserta, setPeserta] = useState<Peserta[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Peserta | null>(null);
@@ -133,21 +133,14 @@ export default function PesertaTable({
   }
 
   return (
-    <div
-      className={`flex flex-col gap-4 ${scrollOnFilter ? "" : "flex-1 min-h-0"}`}
-    >
+    <div className="flex flex-col gap-4">
       <div className="shrink-0">
-        <FilterBar
-          onFilter={handleFilter}
-          onFilterOpenChange={onFilterOpenChange}
-        />
+        <FilterBar onFilter={handleFilter} />
       </div>
 
-      <div
-        className={`rounded-lg border border-[#e2e8f0] bg-white relative  ${scrollOnFilter ? "" : "flex-1 min-h-0 overflow-auto scrollbar-thin"}`}
-      >
+      <div className="rounded-lg border border-[#e2e8f0] bg-white relative">
         <Table>
-          <TableHeader className="sticky top-0 z-10 shadow-[0_1px_0_0_#e2e8f0]">
+          <TableHeader>
             <TableRow className="bg-gray-50">
               <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
                 No
@@ -168,7 +161,10 @@ export default function PesertaTable({
                 Rombongan
               </TableHead>
               <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
-                Total Rombongan
+                Headcount
+              </TableHead>
+              <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
+                Nomor Kendaraan
               </TableHead>
               <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
                 Hadir
@@ -184,16 +180,17 @@ export default function PesertaTable({
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={10} className="py-12 text-center">
+                <TableCell colSpan={11} className="py-12 text-center">
                   <Loader2 className="mx-auto h-5 w-5 animate-spin text-muted-foreground" />
                 </TableCell>
               </TableRow>
             ) : peserta.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={10}
+                  colSpan={11}
                   className="py-12 text-center text-sm text-muted-foreground"
                 >
+                  <FileQuestionMark className="mx-auto h-10 w-10 text-muted-foreground mb-2" />
                   Belum ada peserta
                 </TableCell>
               </TableRow>
@@ -240,9 +237,14 @@ export default function PesertaTable({
                   </TableCell>
                   <TableCell className="font-mono text-sm font-medium">
                     {getPesertaHeadcount(
-                      p.membawa_rombongan,
-                      p.jumlah_rombongan,
+                      p.rombongan_ikhwan_dewasa,
+                      p.rombongan_ikhwan_anak,
+                      p.rombongan_akhwat_dewasa,
+                      p.rombongan_akhwat_anak,
                     )}
+                  </TableCell>
+                  <TableCell className="font-mono text-xs">
+                    {p.nomor_kendaraan ?? "-"}
                   </TableCell>
                   <TableCell>
                     <div

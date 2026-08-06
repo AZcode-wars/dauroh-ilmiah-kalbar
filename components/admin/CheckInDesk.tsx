@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ClipboardCheck, Loader2, Search, X } from "lucide-react";
+import { ClipboardCheck, Loader2, Search, X, UserRoundX } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Peserta } from "@/types/peserta";
@@ -96,8 +96,8 @@ export default function CheckInDesk() {
                   is_hadir: !x.is_hadir,
                   hadir_at: !x.is_hadir ? new Date().toISOString() : null,
                 }
-              : x
-          )
+              : x,
+          ),
         );
         // Refresh ringkasan setelah perubahan
         const summaryRes = await fetch("/api/admin/peserta/summary");
@@ -172,6 +172,7 @@ export default function CheckInDesk() {
           </div>
         ) : peserta.length === 0 ? (
           <p className="py-10 text-center text-sm text-muted-foreground">
+            <UserRoundX className="mx-auto h-10 w-10 text-muted-foreground mb-2" />
             Tidak ada peserta
           </p>
         ) : (
@@ -187,7 +188,13 @@ export default function CheckInDesk() {
                   {p.nomor_wa}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Headcount: {getPesertaHeadcount(p.membawa_rombongan, p.jumlah_rombongan)}
+                  Headcount:{" "}
+                  {getPesertaHeadcount(
+                    p.rombongan_ikhwan_dewasa,
+                    p.rombongan_ikhwan_anak,
+                    p.rombongan_akhwat_dewasa,
+                    p.rombongan_akhwat_anak,
+                  )}
                 </p>
               </div>
               {p.is_hadir ? (

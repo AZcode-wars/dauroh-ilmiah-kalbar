@@ -24,14 +24,10 @@ export type FilterValues = {
 
 type FilterBarProps = {
   onFilter: (filters: FilterValues) => void;
-  onFilterOpenChange?: (open: boolean) => void;
 };
 
 // Filter dan pencarian data peserta dengan dropdown dan input teks
-export default function FilterBar({
-  onFilter,
-  onFilterOpenChange,
-}: FilterBarProps) {
+export default function FilterBar({ onFilter }: FilterBarProps) {
   const [search, setSearch] = useState("");
   const [asal, setAsal] = useState("");
   const [menginap, setMenginap] = useState("");
@@ -42,7 +38,6 @@ export default function FilterBar({
   function toggleFilters() {
     const next = !showFilters;
     setShowFilters(next);
-    onFilterOpenChange?.(next);
   }
 
   function applyFilters() {

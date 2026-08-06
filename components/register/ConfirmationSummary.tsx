@@ -8,21 +8,39 @@ interface ConfirmationSummaryProps {
   peserta: Peserta;
 }
 
-export function ConfirmationSummary({ peserta }: ConfirmationSummaryProps) {
+export function buildConfirmationRows(peserta: Peserta): Array<{ label: string; value: string }> {
   const asalLabel = KABUPATEN_KALBAR.find((k) => k === peserta.asal) || peserta.asal;
   const kendaraanLabel = JENIS_KENDARAAN.find((k) => k.value === peserta.jenis_kendaraan)?.label || peserta.jenis_kendaraan;
 
-  const rows: Array<{ label: string; value: string }> = [
+  // Total orang dalam rombongan termasuk pendaftar
+  const totalRombongan =
+    1 +
+    peserta.rombongan_ikhwan_dewasa +
+    peserta.rombongan_ikhwan_anak +
+    peserta.rombongan_akhwat_dewasa +
+    peserta.rombongan_akhwat_anak;
+
+  const rombonganValue = peserta.membawa_rombongan
+    ? [
+        `Ya (total ${totalRombongan} orang)`,
+        `Ikhwan dewasa: ${peserta.rombongan_ikhwan_dewasa} · Anak: ${peserta.rombongan_ikhwan_anak}`,
+        `Akhwat dewasa: ${peserta.rombongan_akhwat_dewasa} · Anak: ${peserta.rombongan_akhwat_anak}`,
+        `Asatidzah: ${(peserta.is_asatidzah ? 1 : 0) + peserta.jumlah_asatidzah}${peserta.is_asatidzah ? " (termasuk Anda)" : ""}`,
+      ].join("\n")
+    : "Tidak";
+
+  return [
     { label: "Nama", value: peserta.nama },
     { label: "Nomor WA", value: peserta.nomor_wa },
     { label: "Asal", value: asalLabel },
     { label: "Menginap", value: peserta.menginap ? "Ya" : "Tidak" },
-    {
-      label: "Rombongan",
-      value: peserta.membawa_rombongan
-        ? `Ya (${peserta.jumlah_rombongan ?? 0} orang)`
-        : "Tidak",
-    },
+    { label: "Rombongan", value: rombonganValue },
+    ...(peserta.membawa_rombongan
+      ? [
+          { label: "Amir Safar", value: peserta.amir_safar ?? "-" },
+          { label: "Driver", value: peserta.driver ?? "-" },
+        ]
+      : []),
     {
       label: "Keberangkatan",
       value: peserta.tipe_waktu_berangkat === "jam_pasti"
@@ -36,7 +54,19 @@ export function ConfirmationSummary({ peserta }: ConfirmationSummaryProps) {
         : `Fleksibel - ${peserta.deskripsi_kepulangan ?? "-"}`,
     },
     { label: "Kendaraan", value: kendaraanLabel },
+    { label: "Nomor Kendaraan", value: peserta.nomor_kendaraan ?? "-" },
+    ...(peserta.keterangan ? [{ label: "Keterangan", value: peserta.keterangan }] : []),
   ];
+}
+
+export function buildConfirmationMessage(peserta: Peserta): string {
+  const rows = buildConfirmationRows(peserta);
+  const body = rows.map((row) => `${row.label}: ${row.value}`).join("\n");
+  return `Assalamu'alaikum, saya ingin konfirmasi pendaftaran Dauroh Ilmiah Kalbar - Manis Raya 2026.\n\n${body}`;
+}
+
+export function ConfirmationSummary({ peserta }: ConfirmationSummaryProps) {
+  const rows = buildConfirmationRows(peserta);
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-[0_4px_20px_rgba(0,53,39,0.08)]">
@@ -50,7 +80,7 @@ export function ConfirmationSummary({ peserta }: ConfirmationSummaryProps) {
             <span className="text-emerald/60 font-sans text-sm font-medium shrink-0">
               {row.label}
             </span>
-            <span className="text-emerald font-sans text-sm font-semibold text-right">
+            <span className="text-emerald font-sans text-sm font-semibold text-right whitespace-pre-line">
               {row.value}
             </span>
           </div>

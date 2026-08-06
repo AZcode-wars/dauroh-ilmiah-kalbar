@@ -54,7 +54,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           </div>
         </header>
 
-        <main className="flex flex-col flex-1 min-h-0 overflow-y-auto scrollbar-none p-4 md:p-6 lg:p-8">
+        <main className="flex flex-col flex-1 min-h-0 overflow-y-auto scrollbar-thin p-4 md:p-6 lg:p-8">
           {children}
         </main>
       </div>

@@ -25,6 +25,7 @@ import {
 import { Trash2, Loader2, ClipboardCheck } from "lucide-react";
 import type { Peserta } from "@/types/peserta";
 import { JENIS_KENDARAAN } from "@/lib/constants";
+import { getPesertaHeadcount } from "@/lib/headcount";
 
 type PesertaDetailModalProps = {
   peserta: Peserta;
@@ -82,7 +83,19 @@ export default function PesertaDetailModal({
   }
 
   const kendaraanLabel = JENIS_KENDARAAN.find((k) => k.value === peserta.jenis_kendaraan)?.label;
-  const headcount = peserta.membawa_rombongan ? 1 + (peserta.jumlah_rombongan ?? 0) : 1;
+  // Headcount selalu menyertakan pendaftar + seluruh rincian rombongan
+  const headcount = getPesertaHeadcount(
+    peserta.rombongan_ikhwan_dewasa,
+    peserta.rombongan_ikhwan_anak,
+    peserta.rombongan_akhwat_dewasa,
+    peserta.rombongan_akhwat_anak,
+  );
+  // Jumlah anggota rombongan tanpa pendaftar
+  const totalRombongan =
+    peserta.rombongan_ikhwan_dewasa +
+    peserta.rombongan_ikhwan_anak +
+    peserta.rombongan_akhwat_dewasa +
+    peserta.rombongan_akhwat_anak;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -111,7 +124,7 @@ export default function PesertaDetailModal({
             </Badge>
             {peserta.membawa_rombongan && (
               <Badge variant="secondary" className="bg-gold/10 text-brown">
-                Rombongan ({peserta.jumlah_rombongan} org)
+                Rombongan ({totalRombongan} org)
               </Badge>
             )}
             <Badge
@@ -148,6 +161,31 @@ export default function PesertaDetailModal({
               }
             />
             <DataRow label="Tgl Daftar" value={formatToWIB(peserta.created_at)} />
+            <DataRow label="Nomor Kendaraan" value={peserta.nomor_kendaraan ?? "-"} />
+            {peserta.membawa_rombongan && (
+              <>
+                <DataRow label="Amir Safar" value={peserta.amir_safar ?? "-"} />
+                <DataRow label="Driver" value={peserta.driver ?? "-"} />
+                <DataRow
+                  label="Rombongan"
+                  className="col-span-2"
+                  value={`Ikhwan: ${peserta.rombongan_ikhwan_dewasa} dewasa · ${peserta.rombongan_ikhwan_anak} anak\nAkhwat: ${peserta.rombongan_akhwat_dewasa} dewasa · ${peserta.rombongan_akhwat_anak} anak`}
+                />
+              </>
+            )}
+            {(peserta.jumlah_asatidzah > 0 || peserta.is_asatidzah) && (
+              <DataRow
+                label="Asatidzah"
+                value={`${(peserta.is_asatidzah ? 1 : 0) + peserta.jumlah_asatidzah} org${peserta.is_asatidzah ? " (termasuk Anda)" : ""}`}
+              />
+            )}
+            {peserta.keterangan != null && peserta.keterangan.trim().length > 0 && (
+              <DataRow
+                label="Keterangan"
+                value={peserta.keterangan}
+                className="col-span-2"
+              />
+            )}
           </div>
         </div>
 
@@ -203,13 +241,24 @@ export default function PesertaDetailModal({
 }
 
 // Baris data label-value di dalam modal detail
-function DataRow({ label, value }: { label: string; value: string }) {
+function DataRow({
+  label,
+  value,
+  className = "",
+}: {
+  label: string;
+  value: string;
+  className?: string;
+}) {
   return (
-    <div>
+    <div className={className}>
       <p className="text-[11px] font-semibold uppercase tracking-wider text-[#64748b]">
         {label}
       </p>
-      <p className="mt-0.5 text-[13px] font-medium text-gray-800">{value}</p>
+      {/* whitespace-pre-line agar nilai multi-baris (rincian rombongan) tampil sebagai baris baru */}
+      <p className="mt-0.5 text-[13px] font-medium whitespace-pre-line text-gray-800">
+        {value}
+      </p>
     </div>
   );
 }

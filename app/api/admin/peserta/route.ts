@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth";
-import { getActivePeserta, createPeserta } from "@/lib/peserta";
+import { getActivePeserta, createPeserta, generateNomorKendaraan } from "@/lib/peserta";
 import { registerPesertaSchema, canonicalizeRegisterInput } from "@/lib/validations";
 import type { ApiError, ApiSuccess } from "@/types/api";
 import type { Peserta } from "@/types/peserta";
@@ -50,7 +50,13 @@ export async function POST(request: Request) {
     }
 
     const canonicalized = canonicalizeRegisterInput(parsed.data);
-    const peserta = await createPeserta(canonicalized);
+
+    // Generate nomor kendaraan otomatis (null untuk angkutan umum), lalu insert
+    const nomorKendaraan = await generateNomorKendaraan(
+      canonicalized.asal,
+      canonicalized.jenis_kendaraan
+    );
+    const peserta = await createPeserta(canonicalized, nomorKendaraan);
 
     const res: ApiSuccess<Peserta> = { success: true, message: "Peserta berhasil ditambahkan", data: peserta };
     return NextResponse.json(res);

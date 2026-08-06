@@ -22,5 +22,8 @@ export const JENIS_KENDARAAN = [
   { value: "angkutan_umum", label: "Angkutan Umum" },
 ] as const;
 
+// Nomor WhatsApp panitia untuk konfirmasi pendaftaran
+export const PANITIA_KONFIRMASI_WA = "082254655476";
+
 // Nama cookie untuk session admin
 export const ADMIN_SESSION_COOKIE = "admin_session";

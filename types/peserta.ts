@@ -10,7 +10,16 @@ export type Peserta = {
   menginap: boolean;
   asal: string;
   membawa_rombongan: boolean;
-  jumlah_rombongan: number | null;
+  nomor_kendaraan: string | null;
+  amir_safar: string | null;
+  driver: string | null;
+  rombongan_ikhwan_dewasa: number;
+  rombongan_ikhwan_anak: number;
+  rombongan_akhwat_dewasa: number;
+  rombongan_akhwat_anak: number;
+  is_asatidzah: boolean;
+  jumlah_asatidzah: number;
+  keterangan: string | null;
   tipe_waktu_berangkat: TipeWaktu;
   waktu_berangkat: string | null;
   deskripsi_berangkat: string | null;
