@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { CalendarDays, MapPin } from "lucide-react";
 import { AnimateOnMount } from "@/components/AnimateOnMount";
+import { RegisterLoadingLink } from "@/components/register/RegisterLoadingLink";
 
 interface HeroSectionProps {
   contactWa: string;
@@ -234,7 +235,7 @@ export function HeroSection({ contactWa }: HeroSectionProps) {
 
         {/* CTA di sidebar */}
         <div className="px-5 pt-6">
-          <Link
+          <RegisterLoadingLink
             href="/register"
             onClick={closeSidebar}
             className="flex items-center justify-center gap-2 w-full bg-gold text-emerald font-sans font-semibold px-6 py-3 rounded-xl hover:bg-gold/90 transition-colors"
@@ -253,7 +254,7 @@ export function HeroSection({ contactWa }: HeroSectionProps) {
                 d="M17 8l4 4m0 0l-4 4m4-4H3"
               />
             </svg>
-          </Link>
+          </RegisterLoadingLink>
         </div>
       </div>
 
@@ -327,7 +328,7 @@ export function HeroSection({ contactWa }: HeroSectionProps) {
           {/* CTA */}
           <AnimateOnMount delay={500}>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
+              <RegisterLoadingLink
                 href="/register"
                 className="inline-flex items-center justify-center gap-2 bg-gold text-emerald font-sans font-semibold px-8 py-3.5 rounded-xl hover:bg-gold/90 transition-colors text-base"
               >
@@ -345,7 +346,7 @@ export function HeroSection({ contactWa }: HeroSectionProps) {
                     d="M17 8l4 4m0 0l-4 4m4-4H3"
                   />
                 </svg>
-              </Link>
+              </RegisterLoadingLink>
 
               <a
                 href={waUrl}

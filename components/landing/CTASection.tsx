@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { RegisterLoadingLink } from "@/components/register/RegisterLoadingLink";
 
 interface CTASectionProps {
   contactWa: string;
@@ -27,12 +27,12 @@ export function CTASection({ contactWa }: CTASectionProps) {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
+            <RegisterLoadingLink
               href="/register"
               className="inline-flex items-center justify-center gap-2 bg-gold text-emerald font-sans font-semibold px-8 py-3.5 rounded-xl hover:bg-gold/90 transition-colors text-base"
             >
               Daftar Sekarang
-            </Link>
+            </RegisterLoadingLink>
 
             <a
               href={waUrl}
