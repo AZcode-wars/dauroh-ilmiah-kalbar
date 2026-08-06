@@ -68,6 +68,7 @@ export function RegistrationForm() {
   const menginap = watch("menginap");
   const membawaRombongan = watch("membawa_rombongan");
   const jenisKendaraan = watch("jenis_kendaraan");
+  const jenisKelamin = watch("jenis_kelamin");
   const isAsatidzah = watch("is_asatidzah");
   const jumlahAsatidzah = watch("jumlah_asatidzah");
   const nama = watch("nama");
@@ -300,13 +301,28 @@ export function RegistrationForm() {
             <label className="font-sans text-sm font-semibold text-emerald/80">
               Jenis Kelamin
             </label>
-            <select
-              {...register("jenis_kelamin")}
-              className="w-full bg-cream-muted border border-emerald/20 rounded-xl px-4 py-3 font-sans text-sm focus:border-gold focus:ring-2 focus:ring-gold/10 transition-colors appearance-none"
-            >
-              <option value="ikhwan">Ikhwan Dewasa</option>
-              <option value="akhwat">Akhwat Dewasa</option>
-            </select>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  value="ikhwan"
+                  checked={jenisKelamin === "ikhwan"}
+                  onChange={() => setValue("jenis_kelamin", "ikhwan")}
+                  className="w-4 h-4 text-emerald border-emerald/30 focus:ring-emerald/20"
+                />
+                <span className="font-sans text-sm text-emerald">Laki-laki</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  value="akhwat"
+                  checked={jenisKelamin === "akhwat"}
+                  onChange={() => setValue("jenis_kelamin", "akhwat")}
+                  className="w-4 h-4 text-emerald border-emerald/30 focus:ring-emerald/20"
+                />
+                <span className="font-sans text-sm text-emerald">Perempuan</span>
+              </label>
+            </div>
             {errors.jenis_kelamin && (
               <p className="text-danger font-sans text-xs mt-1">
                 {errors.jenis_kelamin.message}

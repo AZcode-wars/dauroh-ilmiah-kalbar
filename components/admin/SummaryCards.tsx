@@ -10,7 +10,6 @@ import {
   UtensilsCrossed,
   Info,
   ClipboardCheck,
-  CircleUser,
   GraduationCap,
 } from "lucide-react";
 import {
@@ -24,10 +23,8 @@ import {
 const CARD_DEFS = [
   { key: "total_headcount", label: "Total Peserta", icon: Users },
   { key: "total_asatidzah", label: "Asatidzah", icon: GraduationCap },
-  { key: "total_ikhwan_dewasa", label: "Ikhwan Dewasa", icon: Users },
-  { key: "total_akhwat_dewasa", label: "Akhwat Dewasa", icon: Users },
-  { key: "total_anak_laki", label: "Anak Laki-laki", icon: CircleUser },
-  { key: "total_anak_perempuan", label: "Anak Perempuan", icon: CircleUser },
+  { key: "total_ikhwan", label: "Ikhwan", icon: Users },
+  { key: "total_akhwat", label: "Akhwat", icon: Users },
   { key: "total_menginap", label: "Menginap", icon: BedDouble },
   {
     key: "total_paket_makan_peserta",
@@ -46,6 +43,17 @@ const CARD_DEFS = [
 ];
 
 type Summary = Record<string, number>;
+
+// Nilai tampil kartu gabungan ikhwan/akhwat (dewasa + anak)
+function getCardValue(summary: Summary, key: string): number {
+  if (key === "total_ikhwan") {
+    return (summary.total_ikhwan_dewasa ?? 0) + (summary.total_anak_laki ?? 0);
+  }
+  if (key === "total_akhwat") {
+    return (summary.total_akhwat_dewasa ?? 0) + (summary.total_anak_perempuan ?? 0);
+  }
+  return summary[key] ?? 0;
+}
 
 function AnimatedValue({
   value,
@@ -119,9 +127,11 @@ export default function SummaryCards() {
     <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {CARD_DEFS.map((def, index) => {
         const Icon = def.icon;
-        const val = summary[def.key] ?? 0;
+        const val = getCardValue(summary, def.key);
         const isPaketMakan = def.key === "total_paket_makan_peserta";
         const isTotalPeserta = def.key === "total_headcount";
+        const isIkhwan = def.key === "total_ikhwan";
+        const isAkhwat = def.key === "total_akhwat";
 
         return (
           <div
@@ -156,6 +166,35 @@ export default function SummaryCards() {
                         <span className="font-serif text-xl font-bold text-emerald">
                           {summary.total_peserta_non_asatidzah ?? 0} peserta × 5
                         </span>
+                      </div>
+                      <div className="border-t border-[#e2e8f0] pt-3">
+                        <div className="text-xs font-semibold uppercase tracking-wide text-[#64748b]">
+                          Rincian per Gender
+                        </div>
+                        <div className="mt-2 space-y-2">
+                          <div className="rounded-lg bg-emerald/5 px-4 py-3">
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold">Paket Makan Ikhwan</span>
+                              <span className="font-serif text-lg font-bold text-emerald">
+                                {(summary.total_ikhwan_dewasa ?? 0) + (summary.total_anak_laki ?? 0)} × 5
+                              </span>
+                            </div>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              Dewasa: {summary.total_ikhwan_dewasa ?? 0} · Anak: {summary.total_anak_laki ?? 0}
+                            </p>
+                          </div>
+                          <div className="rounded-lg bg-emerald/5 px-4 py-3">
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold">Paket Makan Akhwat</span>
+                              <span className="font-serif text-lg font-bold text-emerald">
+                                {(summary.total_akhwat_dewasa ?? 0) + (summary.total_anak_perempuan ?? 0)} × 5
+                              </span>
+                            </div>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              Dewasa: {summary.total_akhwat_dewasa ?? 0} · Anak: {summary.total_anak_perempuan ?? 0}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                       <div className="flex items-center justify-between rounded-lg bg-gold/10 px-4 py-3">
                         <span className="font-semibold">
@@ -216,6 +255,78 @@ export default function SummaryCards() {
                         </span>
                         <span className="font-serif text-xl font-bold text-brown">
                           {summary.total_asatidzah ?? 0}
+                        </span>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
+              {isIkhwan && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button className="ml-auto rounded-full p-0.5 text-[#64748b] hover:text-emerald hover:bg-emerald/5 transition-colors">
+                      <Info className="h-3.5 w-3.5" />
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-sm">
+                    <DialogHeader>
+                      <DialogTitle className="font-serif text-emerald">
+                        Rincian Ikhwan
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-3 text-sm text-gray-700">
+                      <div className="flex items-center justify-between rounded-lg bg-emerald/5 px-4 py-3">
+                        <span className="font-semibold">Dewasa</span>
+                        <span className="font-serif text-xl font-bold text-emerald">
+                          {summary.total_ikhwan_dewasa ?? 0}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between rounded-lg bg-gold/10 px-4 py-3">
+                        <span className="font-semibold">Anak (laki-laki)</span>
+                        <span className="font-serif text-xl font-bold text-brown">
+                          {summary.total_anak_laki ?? 0}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between rounded-lg bg-emerald/5 px-4 py-3">
+                        <span className="font-semibold">Total Ikhwan</span>
+                        <span className="font-serif text-xl font-bold text-emerald">
+                          {(summary.total_ikhwan_dewasa ?? 0) + (summary.total_anak_laki ?? 0)}
+                        </span>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
+              {isAkhwat && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button className="ml-auto rounded-full p-0.5 text-[#64748b] hover:text-emerald hover:bg-emerald/5 transition-colors">
+                      <Info className="h-3.5 w-3.5" />
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-sm">
+                    <DialogHeader>
+                      <DialogTitle className="font-serif text-emerald">
+                        Rincian Akhwat
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-3 text-sm text-gray-700">
+                      <div className="flex items-center justify-between rounded-lg bg-emerald/5 px-4 py-3">
+                        <span className="font-semibold">Dewasa</span>
+                        <span className="font-serif text-xl font-bold text-emerald">
+                          {summary.total_akhwat_dewasa ?? 0}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between rounded-lg bg-gold/10 px-4 py-3">
+                        <span className="font-semibold">Anak (perempuan)</span>
+                        <span className="font-serif text-xl font-bold text-brown">
+                          {summary.total_anak_perempuan ?? 0}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between rounded-lg bg-emerald/5 px-4 py-3">
+                        <span className="font-semibold">Total Akhwat</span>
+                        <span className="font-serif text-xl font-bold text-emerald">
+                          {(summary.total_akhwat_dewasa ?? 0) + (summary.total_anak_perempuan ?? 0)}
                         </span>
                       </div>
                     </div>
