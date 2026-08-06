@@ -15,6 +15,7 @@ import {
   KABUPATEN_KALBAR,
   JENIS_KENDARAAN,
   PANITIA_KONFIRMASI_WA,
+  ABU_YUSUF,
 } from "@/lib/constants";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { TimeToggleField } from "@/components/register/TimeToggleField";
@@ -201,6 +202,19 @@ export function RegistrationForm() {
             mengonfirmasi pendaftarannya kepada panitia sebagai bentuk
             verifikasi data. Apabila mengalami kesulitan dalam mengisi formulir,
             silakan hubungi Panitia:
+          </p>
+          <p className="font-sans text-sm text-emerald/70">
+            <a
+              href={buildWhatsAppUrl(
+                ABU_YUSUF,
+                "Assalamu'alaikum, saya ingin bertanya tentang pendaftaran Dauroh Ilmiah Kalbar - Manis Raya 2026.",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald font-semibold underline underline-offset-2 hover:text-gold transition-colors"
+            >
+              Abu Yusuf
+            </a>
           </p>
           <p className="font-sans text-sm text-emerald/70">
             <a
