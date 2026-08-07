@@ -59,3 +59,8 @@ e2e
 
 # tooling workspaces
 /.superpowers/
+
+.open-next
+.wrangler
+.open-next-app
+.opennext
