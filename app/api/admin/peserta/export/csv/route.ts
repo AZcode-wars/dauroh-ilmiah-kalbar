@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/server";
-import { formatNomorWaForCsv } from "@/lib/csv";
+import { escapeCsvField, formatNomorWaForCsv } from "@/lib/csv";
 import { getPesertaHeadcount } from "@/lib/headcount";
 import type { ApiError } from "@/types/api";
 import type { Peserta } from "@/types/peserta";
@@ -65,33 +65,33 @@ export async function GET() {
       const paketMakanPeserta = (headcount - asatidzahPeserta) * 5;
       const paketMakanAsatidzah = asatidzahPeserta * 5;
       return [
-        p.nama,
+        escapeCsvField(p.nama),
         formatNomorWaForCsv(p.nomor_wa),
-        String(p.menginap),
-        p.asal,
-        p.jenis_kelamin,
-        String(p.membawa_rombongan),
-        String(p.rombongan_ikhwan_dewasa),
-        String(p.rombongan_ikhwan_anak),
-        String(p.rombongan_akhwat_dewasa),
-        String(p.rombongan_akhwat_anak),
-        String(p.is_asatidzah),
-        String(asatidzahPeserta),
-        p.nomor_kendaraan ?? "",
-        p.amir_safar ?? "",
-        p.driver ?? "",
-        p.keterangan ?? "",
-        p.waktu_berangkat ?? "",
-        p.deskripsi_berangkat ?? "",
-        p.waktu_kepulangan ?? "",
-        p.deskripsi_kepulangan ?? "",
-        p.jenis_kendaraan,
-        String(headcount),
-        String(paketMakanPeserta),
-        String(paketMakanAsatidzah),
-        p.created_at,
-        String(p.is_hadir),
-        p.hadir_at ?? "",
+        escapeCsvField(String(p.menginap)),
+        escapeCsvField(p.asal),
+        escapeCsvField(p.jenis_kelamin),
+        escapeCsvField(String(p.membawa_rombongan)),
+        escapeCsvField(String(p.rombongan_ikhwan_dewasa)),
+        escapeCsvField(String(p.rombongan_ikhwan_anak)),
+        escapeCsvField(String(p.rombongan_akhwat_dewasa)),
+        escapeCsvField(String(p.rombongan_akhwat_anak)),
+        escapeCsvField(String(p.is_asatidzah)),
+        escapeCsvField(String(asatidzahPeserta)),
+        escapeCsvField(p.nomor_kendaraan ?? ""),
+        escapeCsvField(p.amir_safar ?? ""),
+        escapeCsvField(p.driver ?? ""),
+        escapeCsvField(p.keterangan ?? ""),
+        escapeCsvField(p.waktu_berangkat ?? ""),
+        escapeCsvField(p.deskripsi_berangkat ?? ""),
+        escapeCsvField(p.waktu_kepulangan ?? ""),
+        escapeCsvField(p.deskripsi_kepulangan ?? ""),
+        escapeCsvField(p.jenis_kendaraan),
+        escapeCsvField(String(headcount)),
+        escapeCsvField(String(paketMakanPeserta)),
+        escapeCsvField(String(paketMakanAsatidzah)),
+        escapeCsvField(p.created_at ?? ""),
+        escapeCsvField(String(p.is_hadir)),
+        escapeCsvField(p.hadir_at ?? ""),
       ];
     });
 

@@ -11,8 +11,6 @@ export const KABUPATEN_KALBAR = [
   "Landak",
   "Bengkayang",
   "Singkawang",
-  "Kota Pontianak",
-  "Kota Singkawang",
 ] as const;
 
 // Pilihan jenis kendaraan yang digunakan peserta
